@@ -1,17 +1,15 @@
 package uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
 
-class FlightTester {
+public class FlightTester {
 	private Flight flight;
 	
-	@BeforeEach
+	@Before
 	public void setUp() {
 		flight = new Flight("FLN001", "Heathrow", "Heriot Airlines", 35, 10.0, 10.0);
 	}
@@ -21,71 +19,86 @@ class FlightTester {
 		assertEquals("Flight constructor check", "FLN001,Heathrow,Heriot Airlines,35,10.0,10.0", flight.toString());
 	}
 
+	@Test
+	public void testGettingFlightCode() {
+		assertEquals("Flight code should be FLN001", "FLN001", flight.FlightCode());
+	}
+
+	@Test
+	public void testGettingTheDestinationAirport() {
+		assertEquals("Destination should be Heathrow", "Heathrow", flight.Destination());
+	}
+
+	@Test
+	public void testGettingTheCarrier() {
+		assertEquals("Carrier should be Heriot Airlines", "Heriot Airlines", flight.Carrier());
+	}
+
 	@Test 
 	public void testTotalWeightStartsAtZero() {
-		assertEquals(0.0, flight.TotalWeight(), "Total weight starts at 0.0");
+		assertEquals("Total weight should be 0.0 after creation.", 0.0, flight.TotalWeight(), 0);
 	}
 
 	@Test 
 	public void testTotalWeightChanges() {
 		flight.AddToWeight(2.0);
-		assertEquals(2.0, flight.TotalWeight(), "Total weight changes to 2.0");
+		assertEquals("Total weight should change to 2.0", 2.0, flight.TotalWeight(), 0);
 	}
 
 	@Test 
 	public void testTotalVolumeStartsAtZero() {
-		assertEquals(0.0, flight.TotalVolume(), "Total volume starts at 0.0");
+		assertEquals("Total volume should start at 0.0", 0.0, flight.TotalVolume(), 0);
 	}
 
 	@Test 
 	public void testTotalVolumeChanges() {
 		flight.AddToVolume(3.0);
-		assertEquals(3.0, flight.TotalVolume(), "Total volume changes to 3.0");
+		assertEquals("Total volume should change to 3.0", 3.0, flight.TotalVolume(), 0);
 	}
 
 	@Test 
 	public void testFeesPaidStartsAtZero() {
-		assertEquals(0.0, flight.TotalFeesPaid(), "Fees starts at 0.0");
+		assertEquals("Fees should start at 0.0", 0.0, flight.TotalFeesPaid(), 0);
 	}
 
 	@Test 
 	public void testFeesPaidChanges() {
 		flight.AddToFees(4.0);
-		assertEquals(4.0, flight.TotalFeesPaid(), "Fees changes to 4.0");
+		assertEquals("Fees should change to 4.0", 4.0, flight.TotalFeesPaid(), 0);
 	}
 	
 	@Test
 	public void testVolumeAcceptableWorksCorrectlyOnCreation() {
-		assertEquals(true, flight.VolumeAcceptable(), "On creation, volume is acceptable");
+		assertEquals("On creation, volume is acceptable", true, flight.VolumeAcceptable());
 	}
 	
 	@Test
 	public void testVolumeAcceptableWorksCorrectlyAtLimit() {
 		flight.AddToVolume(10.0);
-		assertEquals(true, flight.VolumeAcceptable(), "At limit, volume is acceptable");
+		assertEquals("At limit, volume is acceptable", true, flight.VolumeAcceptable());
 	}
 	
 	@Test
 	public void testVolumeAcceptableWorksCorrectlyOverLimit() {
 		flight.AddToVolume(10.1);
-		assertEquals(false, flight.VolumeAcceptable(), "Over limit, volume is not acceptable");
+		assertEquals("Over limit, volume is not acceptable", false, flight.VolumeAcceptable());
 	}
 	
 	@Test
 	public void testWeightAcceptableWorksCorrectlyOnCreation() {
-		assertEquals(true, flight.WeightAcceptable(), "On creation, weight is acceptable");
+		assertEquals("On creation, weight is acceptable", true, flight.WeightAcceptable());
 	}
 	
 	@Test
 	public void testWeightAcceptableWorksCorrectlyAtLimit() {
 		flight.AddToWeight(10.0);
-		assertEquals(true, flight.WeightAcceptable(), "At limit, weight is acceptable");
+		assertEquals("At limit, weight is acceptable", true, flight.WeightAcceptable());
 	}
 	
 	@Test
 	public void testWeightAcceptableWorksCorrectlyOverLimit() {
 		flight.AddToWeight(10.1);
-		assertEquals(false, flight.WeightAcceptable(), "Over limit, weight is not acceptable");
+		assertEquals("Over limit, weight is not acceptable", false, flight.WeightAcceptable());
 	}
 
 	@Test
@@ -101,18 +114,18 @@ class FlightTester {
 	public void testCompareFlightWithLowerNumber() {
 		Flight preFlight = new Flight("FLN000", "Heathrow", "Heriot Airlines", 50, 50.0, 50.0);
 		
-		assertEquals(1, flight.compareTo(preFlight), "FLN000 is before FLN001");
+		assertEquals("FLN000 is before FLN001", 1, flight.compareTo(preFlight));
 	}
 	
 	@Test
 	public void testCompareFlightWithSameFlight() {
-		assertEquals(0, flight.compareTo(flight), "Knows FLN001 = FLN001");
+		assertEquals("Knows FLN001 = FLN001", 0, flight.compareTo(flight));
 	}
 	
 	@Test
 	public void testCompareFlightWithHigherNumber() {
 		Flight followingFlight = new Flight("FLN004", "Heathrow", "Heriot Airlines", 100, 150.0, 150.0);
 		
-		assertEquals(-3, flight.compareTo(followingFlight), "FLN004 is after FLN001");
+		assertEquals("FLN004 is after FLN001", -3, flight.compareTo(followingFlight));
 	}
 }
