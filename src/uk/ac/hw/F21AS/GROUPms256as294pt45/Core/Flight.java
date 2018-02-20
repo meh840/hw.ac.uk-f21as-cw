@@ -41,6 +41,22 @@ public class Flight implements Comparable<Flight>{
 	}
 	
 	/**
+	 * Requests the destination airport for this flight.
+	 * @return String which states the flight's destination.
+	 */
+	public String Destination() {
+		return destinationAirport;
+	}
+	
+	/**
+	 * Requests the carrier for this flight.
+	 * @return String which states the carrier.
+	 */
+	public String Carrier() {
+		return carrier;
+	}
+	
+	/**
 	 * How many passengers the flight can accommodate.
 	 * @return Maximum number of passengers.
 	 */
