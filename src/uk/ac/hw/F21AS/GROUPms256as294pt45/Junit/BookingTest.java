@@ -1,16 +1,15 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.JUnit;
+package uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
 
 import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import org.junit.*;
 import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
 import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Booking;
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
 
 public class BookingTest {
-
-	@BeforeEach
+	private BaggageDetails baggageInfo1, baggageInfo2;
+	private Booking booking1, booking2, booking3;
+	
+	@Before
 	public void setUp() {
 		baggageInfo1= new BaggageDetails(10.0, 1.0, 0.8, 0.4); 
 		baggageInfo2= new BaggageDetails(0.0, 0.0, 0.0, 0.0);
@@ -65,30 +64,29 @@ public class BookingTest {
 	@Test
 	public void testGetCheckInStatus() {
 		String error1 = "GetCheckInStatus Failed \n";
-		String expected=false;
-		String actual=booking1.GetCheckInStatus();
+		boolean expected=false;
+		boolean actual=booking1.GetCheckInStatus();
 		assertEquals(error1, expected, actual);
 	}
 
 	@Test
 	public void testGetBaggageInfo() {
 		String error1 = "GetBaggageInfo Failed \n";
-		String expected=baggageInfo1;
-		String actual=booking1.GetBaggageInfo();
+		BaggageDetails expected=baggageInfo1;
+		BaggageDetails actual=booking1.GetBaggageInfo();
 		assertEquals(error1, expected, actual);
 	}
 
 	@Test
 	public void testCompareTo() {
 		String error1 = "compareTo Failed to distinguish different BookingReferences\n";
-		String BookRef1="VT48QB7";
-		expected1=1;
-		String actual1=booking1.compareTo(booking3);
+		int expected1 = 1;
+		int actual1=booking1.compareTo(booking3);
 		assertEquals(error1, expected1, actual1);
 		
 		String error2 = "compareTo Failed to acknowledge similar BookingReferences\n";
-		String expected2=0;
-		String actual2=booking1.compareTo(booking2);
+		int expected2=0;
+		int actual2=booking1.compareTo(booking2);
 		assertEquals(error2, expected2, actual2);
 	}
 

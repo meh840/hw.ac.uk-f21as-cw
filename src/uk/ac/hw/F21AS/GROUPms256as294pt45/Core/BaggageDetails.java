@@ -1,10 +1,10 @@
 package uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
-//@author Mehdi Seddiq ms256
+//@author Mehdi Seddiq (ms256)
 public class BaggageDetails {
-	public double weight, length, width, height;//dimensions in metre
+	public double weight, length, width, height;//dimensions in cm
 	public double fee;
-	public static final double FREE_DIM=1.90; //metre
-	public static final double FREE_WEIGHT=32.0; //kg
+	public static final double FREE_DIM=190.0; //unit: cm, inspired from: British Airways
+	public static final double FREE_WEIGHT=32.0; //unit: kg, inspired from: British Airways
 	/*
 	Constructor of BaggageDetails class.
 	*/
@@ -28,13 +28,13 @@ public class BaggageDetails {
 		maxDim=Math.max(length,width);
 		maxDim=Math.max(maxDim,height);
 		if (length>FREE_DIM){
-			fee+=40.0*(length-FREE_DIM);
+			fee+=0.20*(length-FREE_DIM);
 		}
 		if (width>FREE_DIM){
-			fee+=40.0*(width-FREE_DIM);
+			fee+=0.20*(width-FREE_DIM);
 		}		
 		if (height>FREE_DIM){
-			fee+=40.0*(height-FREE_DIM);
+			fee+=0.20*(height-FREE_DIM);
 		}		
 		if (weight>FREE_WEIGHT){
 			fee+=8.0*(weight-FREE_WEIGHT);
