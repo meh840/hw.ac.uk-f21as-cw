@@ -7,14 +7,15 @@ public class Booking implements Comparable<Booking>{
 	/**
 	 Constructor of Booking class.
 	*/
-	public Booking(String bookingReference, String flightCode, String firstName, String surname, boolean checkedIn, BaggageDetails baggageInfo) {
+	public Booking(String bookingReference, String flightCode, String firstName, String surname) {
 		this.bookingReference=bookingReference;
 		this.flightCode=flightCode;
 		this.firstName=firstName;
 		this.surname=surname;
-		this.checkedIn=false;
-		this.baggageInfo=baggageInfo;
-}
+		checkedIn=false;
+		baggageInfo=null;
+	}
+	
 	public String GetBookingReference() {
 		return bookingReference;
 	}
@@ -40,11 +41,11 @@ public class Booking implements Comparable<Booking>{
 	}
 	
 	public BaggageDetails GetBaggageInfo(){
-		return this.baggageInfo;
+		return baggageInfo;
 	}
 	
 	public void CheckIn(){
-		this.checkedIn=true;
+		checkedIn=true;
 	}
 
 	@Override
