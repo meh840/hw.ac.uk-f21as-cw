@@ -1,4 +1,4 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
 
 import java.util.TreeMap;
 import java.io.IOException;
@@ -9,8 +9,8 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.FlightLoader;
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.FlightLoader;
 
 public class FlightLoaderTester {
 	FlightLoader loader;

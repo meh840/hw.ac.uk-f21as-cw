@@ -1,7 +1,4 @@
-/**
- * 
- */
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
 
 import static org.junit.Assert.*;
 
@@ -9,9 +6,9 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
-//@author Mehdi Seddiq (ms256)
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
 
+//@author Mehdi Seddiq (ms256)
 public class SummaryGUITest {
 
 	/**

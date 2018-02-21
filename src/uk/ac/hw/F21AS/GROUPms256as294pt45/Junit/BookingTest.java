@@ -1,9 +1,9 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Booking;
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Booking;
 
 public class BookingTest {
 	private BaggageDetails baggageInfo1, baggageInfo2;

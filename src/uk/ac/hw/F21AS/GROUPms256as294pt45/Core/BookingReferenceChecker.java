@@ -1,8 +1,10 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
 
 /**
  * A class that can be called to check a booking reference is in the correct format or not.
  * When system is running this class can not be altered, thus no tampering with check method.
+ * Also has the benefit of having one location which requires updating if the booking reference 
+ * format were to change. 
  * @author Alan Spence (as294)
  *
  */

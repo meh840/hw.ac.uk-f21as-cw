@@ -1,4 +1,4 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
 
 import static org.junit.Assert.*;
 
@@ -6,18 +6,17 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
 
+import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
+
 public class BaggageDetailsTest {
 	private BaggageDetails baggageInfo1, baggageInfo2, baggageInfo3, baggageInfo4;
+	
 	@BeforeClass
 	public void setUpBeforeClass() throws Exception {
 		baggageInfo1 = new BaggageDetails(BaggageDetails.FREE_WEIGHT,0,0,0);
 		baggageInfo2=new BaggageDetails(0,0,0,BaggageDetails.FREE_DIM);
 		baggageInfo3=new BaggageDetails(BaggageDetails.FREE_WEIGHT+1.0,0,0,0);
 		baggageInfo4=new BaggageDetails(0,0,0,BaggageDetails.FREE_DIM+1);		
-	}
-
-	@Test
-	public void test() {
 	}
 
 	@Test

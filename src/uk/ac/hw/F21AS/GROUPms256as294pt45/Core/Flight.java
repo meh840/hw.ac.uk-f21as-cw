@@ -1,4 +1,4 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
 
 /**
  * The class which contains flight information and capacity details for a single flight.

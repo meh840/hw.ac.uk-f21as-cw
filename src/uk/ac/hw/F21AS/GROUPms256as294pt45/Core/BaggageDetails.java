@@ -1,4 +1,4 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
 //@author Mehdi Seddiq (ms256)
 public class BaggageDetails {
 	public double weight, length, width, height;//dimensions in cm

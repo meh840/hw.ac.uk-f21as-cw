@@ -1,10 +1,10 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
 
 public class FlightTester {
 	private Flight flight;

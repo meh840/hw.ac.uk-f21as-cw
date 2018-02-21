@@ -1,4 +1,5 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
+
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class ErrorLogger {
 	public ErrorLogger(){
 		Error_List = new ArrayList<String>() ;
 		Incorrect_Entries =new ArrayList <String>();
-		}
+	}
 	
 	 public int getSizeofEntry() {
 	    	return Incorrect_Entries.size();

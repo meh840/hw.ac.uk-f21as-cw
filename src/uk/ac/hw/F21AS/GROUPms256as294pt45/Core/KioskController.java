@@ -1,4 +1,4 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ public class KioskController {
 	private TreeMap<String, Booking> bookings;
 	private TreeMap<String, Flight> flights;
 	private ArrayList<String> invalidFormatErrors, checkInErrors;
+	private ErrorLogger errorLogger;
 	
 	public KioskController() {
 		// File locations.
@@ -26,6 +27,8 @@ public class KioskController {
 		flights = new TreeMap<String, Flight>();
 		invalidFormatErrors = new ArrayList<String>();
 		checkInErrors = new ArrayList<String>();
+		
+		errorLogger = new ErrorLogger();
 	}
 	
 	public void ReadyKiosk() {
@@ -52,6 +55,12 @@ public class KioskController {
 	}
 	
 	public void StartUpKiosk() {
+		if(!invalidFormatErrors.isEmpty()) {
+			for(String error : invalidFormatErrors) {
+				errorLogger.addEntry(error);
+			}
+		}
 		
+		KioskSearch kiosk = new KioskSearch(bookings, flights, errorLogger);
 	}
 }

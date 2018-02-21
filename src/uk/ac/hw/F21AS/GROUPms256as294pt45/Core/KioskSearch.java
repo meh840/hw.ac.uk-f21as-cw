@@ -1,4 +1,4 @@
-package check_in;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,31 +6,32 @@ import java.util.TreeMap;
 
 import javax.swing.*;
 
-//import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
 /**
- * The class is the Kioks GUI. It is the first frame when you access in Kiosk GUI.
+ * The class is the Kiosk GUI. It is the first frame when you access in Kiosk GUI.
  * It is used as a search engine
  * @author Panagiotis Tsamoutalis (pt45)
  *
  */
-
-
 public class KioskSearch extends JFrame  implements ActionListener{
-	private FlightLoader flights;
+	private TreeMap<String, Flight> flights;
+	private TreeMap<String, Booking> bookings;
 	private ErrorLogger ErrorList;
 	private int referenceSize=7;
 	JButton close, search,SumGui;
 	JTextField refinput, surnameinput, errordisplay1, errordisplay2;
 	JLabel title, refLabel, surnameLabel;
 	KioskCheckIn abc;
+	
 	/**
 	 * Constructor of the Kiosk GUI search engine class.
 	 * @param flightlist from FlightLoader.
 	 * @param ErrosList from ErrorLogger.
 	 */
-	public KioskSearch(FlightLoader flights,ErrorLogger ErrorList) {
+	public KioskSearch(TreeMap<String, Booking> bookings, TreeMap<String, Flight> flights,ErrorLogger ErrorList) {
+		this.bookings = bookings;
     	this.flights = flights;
-    	this.ErrorList=ErrorList;
+    	this.ErrorList = ErrorList;
+    	
     	setTitle("KIOSK");
     	setSize(800,450);
     	setResizable(true);
@@ -43,10 +44,8 @@ public class KioskSearch extends JFrame  implements ActionListener{
         //pack and set visible
         //pack();
         setVisible(true);
-        
-      
-    	
     }
+	
 	/**
 	 * It sets the south panel of the GUI.
 	 * @return A Search button for searching.
@@ -54,8 +53,7 @@ public class KioskSearch extends JFrame  implements ActionListener{
 	 * @return A Summary button to open the SummaryGUI.
 	 */
 	private void setupSouthPanel() {
-		// TODO Auto-generated method stub
-		JPanel southPanel = new JPanel();
+		 JPanel southPanel = new JPanel();
 		 search = new JButton("Search");
 		 search.addActionListener(this);
 	        
@@ -71,13 +69,12 @@ public class KioskSearch extends JFrame  implements ActionListener{
 	     southPanel.add(SumGui);
 	     this.add(southPanel, BorderLayout.SOUTH);
 	}
+	
 	/**
 	 * It is  a method to handle the north panel of the GUI.
 	 * @return A label as the title of the GUI
 	 */
-	
 	private void setupNorthPanel() {
-		// TODO Auto-generated method stub
 		JPanel titlePanel = new JPanel();
 		title = new JLabel("WELCOME TO KIOSK");
 		title.setFont( new Font(Font.MONOSPACED, Font.BOLD,30));
@@ -86,14 +83,13 @@ public class KioskSearch extends JFrame  implements ActionListener{
         northPanel.add(titlePanel);
         this.add(northPanel, BorderLayout.NORTH);   	
 	}
+	
 	/**
 	 * It handles the center panel of the GUI
 	 * @return 2 labels. One for the Reference number and one for surname.
 	 * @return 4 textfields. Two for the Reference number and Two for surname.
 	 */
 	private void setupCenterPanel() {
-		// TODO Auto-generated method stub
-		
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout( new GridLayout(2,1));
 		JPanel mainPanel1 = new JPanel();
@@ -147,23 +143,19 @@ public class KioskSearch extends JFrame  implements ActionListener{
         centerPanel.add(mainPanel);
         this.add(centerPanel,BorderLayout.CENTER);
 	}
+	
 	/**
 	 * It handles the buttons of the GUI
 	 * @param Activation Event e. It is used to indicate which button was activated.
 	 */
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
 		if (e.getSource() == search) {
     		search();
-    	}
-		else if (e.getSource() == close) {
-    		JOptionPane.showMessageDialog(this, 
-    				 " thank you ");
+    	} else if (e.getSource() == close) {
+    		JOptionPane.showMessageDialog(this, " thank you ");
     		System.exit(0);
-    	}else if (e.getSource()==SumGui) {
+    	} else if (e.getSource()==SumGui) {
     		
     	}
 	}
@@ -175,16 +167,31 @@ public class KioskSearch extends JFrame  implements ActionListener{
 	private void search() {
 		String refString = refinput.getText().trim();
 		String surString = surnameinput.getText().trim();
+		
 		boolean surname_checked = check_surname(surString);
 		boolean reference_checked = check_reference(refString);
-		if (surname_checked ==true && reference_checked==true)  {
-			abc=new KioskCheckIn();
-			 
-		 }else {
-			 String Errorrep = ErrorReport();
-			 ErrorList.addError(Errorrep);
-		 }
+		
+		if (surname_checked==true && reference_checked==true)  {
+			Booking booking = GetReferencedBooking(refString, surString);
+			if(booking != null) {
+				
+				abc=new KioskCheckIn();
+			}
+		} else {
+			String Errorrep = ErrorReport();
+			ErrorList.addError(Errorrep);
+		}
 	}
+	
+	private Booking GetReferencedBooking(String reference, String surname) {
+		Booking searchResult = bookings.get(reference);
+		if(searchResult != null) {
+			if(surname.equals(searchResult.))
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * checking the surname's input.
 	 * @param surString
@@ -196,15 +203,14 @@ public class KioskSearch extends JFrame  implements ActionListener{
 			return false;
 		}
 		for(char c : surString.toCharArray()){
-		        if(Character.isDigit(c)|| Character.isSpaceChar(c)){
-		        	errordisplay2.setText("Your surname must not have any spaces or numbers!");
-		        	return false;
-		        }
-		       
+	        if(Character.isDigit(c)|| Character.isSpaceChar(c)){
+	        	errordisplay2.setText("Your surname must not have any spaces or numbers!");
+	        	return false;
+	        }
 		}        
 		return true;
-		
 	}
+	
 	/**
 	 * Checking the reference number input
 	 * @param refString
@@ -213,38 +219,40 @@ public class KioskSearch extends JFrame  implements ActionListener{
 	private Boolean check_reference (String refString) {
 		char[] refArray = new char[refString.toCharArray().length];
 		int counter =0;
+		
 		if (refString == null || refString.isEmpty()) {
 			errordisplay1.setText("Please add your Reference Number!");
 			return false;
 		}
+		
 		if(refString.toCharArray().length <referenceSize) {
 			errordisplay1.setText("Your Reference number is too short!");
 			return false;
-		}
-		else if(refString.toCharArray().length >referenceSize) {
+		} else if(refString.toCharArray().length >referenceSize) {
 			errordisplay1.setText("Your Reference number is too large!");
 			return false;
 		}
+		
 		for(char c : refString.toCharArray()){
-		        if(Character.isSpaceChar(c)){
-		        	errordisplay1.setText("Your surname must not have any spaces !");
-		        	return false;
-		        }
-		       
+	        if(Character.isSpaceChar(c)){
+	        	errordisplay1.setText("Your surname must not have any spaces !");
+	        	return false;
+	        }
 		}    
+		
 		for(char c : refString.toCharArray()) {
 			refArray[counter]=c;
 			counter++;
 		}
-		if(!Character.isLetter(refArray[0]) ||!Character.isLetter(refArray[1]) || !Character.isLetter(refArray[4]) || 
-				!Character.isLetter(refArray[5])|| !Character.isDigit(refArray[2]) || !Character.isDigit(refArray[3])||
-				!Character.isDigit(refArray[6])) {
+		
+		if(!BookingReferenceChecker.CheckABookingReference(refString)) {
 			errordisplay1.setText("Your Reference Number is incorrect !");
         	return false;
 		}
-		return true;
 		
+		return true;
 	}
+	
 	/**
 	 * It makes a report for the ErrorList.
 	 * @return a String with all the information about an error.

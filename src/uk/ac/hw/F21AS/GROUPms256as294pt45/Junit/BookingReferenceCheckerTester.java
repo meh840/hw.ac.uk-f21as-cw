@@ -1,10 +1,10 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BookingReferenceChecker;
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BookingReferenceChecker;
 
 public class BookingReferenceCheckerTester {
 	private String correctFormat = "AA00AA0";

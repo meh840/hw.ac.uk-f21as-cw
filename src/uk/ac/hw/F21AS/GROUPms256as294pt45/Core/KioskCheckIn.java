@@ -1,4 +1,4 @@
-package check_in;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,8 +11,6 @@ import javax.swing.*;
  *
  */
 public class KioskCheckIn extends JFrame  implements ActionListener {
-	
-	
 	JButton cancel, submit;
 	JLabel refDisplay, firstDisplay,surnameDisplay,flightcodeDisplay , destinationDisplay,heighterrorDisplay,
 	widtherrorDisplay,lengtherrorDisplay,weighterrorDisplay;
@@ -23,14 +21,15 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	double limitWeight=32.00;
 	int maxDimension=200;
 	int limitDimension=110;
+	Booking booking;
 	
 	/**
 	 * Constructor of the Kiosk GUI Check in class.
 	 * @param flightlist from FlightLoader.
-	 * @param ErrosList from ErrorLogger.
 	 */
-	public KioskCheckIn() {
-    	
+	public KioskCheckIn(Booking booking) {
+		this.booking = booking;
+		
     	setTitle("KIOSK");
     	setSize(800,800);
     	setResizable(true);
@@ -43,15 +42,13 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
         //pack and set visible
         //pack();
         setVisible(true);
-        
-    	
     }
+	
 	/**
 	 * It sets the south panel of the GUI.
 	 * @return A Submit button for cheking in.
 	 * @return A Cancel button to dispose the GUI.
 	 */
-	
 	private void setupSouthPanel() {
 		// TODO Auto-generated method stub
 		JPanel southPanel = new JPanel();
@@ -67,6 +64,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	     southPanel.add(cancel);
 	     this.add(southPanel, BorderLayout.SOUTH);
 	}
+	
 	/**
 	 * It handles the north panel of the GUI.
 	 * @return A label as the title of the GUI
@@ -83,16 +81,16 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
         northPanel.add(titlePanel);
         this.add(northPanel, BorderLayout.NORTH);   	
 	}
+	
 	/**
 	 * It handles the center panel of the GUI
 	 * It displays all the information about a booking.
 	 * Can be add information about the baggage.
 	 */
 	private void setupCenterPanel() {
-		// TODO Auto-generated method stub
-		
 		JPanel mainPanel1 = new JPanel();
 		mainPanel1.setLayout(new BoxLayout(mainPanel1, BoxLayout.Y_AXIS));
+		
 		// Create the reference number panel
 		JPanel refPanel = new JPanel();
 		refPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
@@ -102,6 +100,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		refPanel.add(refLabel);
 		refPanel.add(refDisplay);
 		mainPanel1.add(refPanel);
+		
 		// Create the firstname panel
 		JPanel firstPanel = new JPanel();
 		firstPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
@@ -114,6 +113,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		firstPanel.add(firstLabel);
 		firstPanel.add(firPanel);
 		mainPanel1.add(firstPanel);
+		
 		// Create the surname panel
 		JPanel surnamePanel = new JPanel();
 		surnamePanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
@@ -126,6 +126,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		surnamePanel.add(surnameLabel);
 		surnamePanel.add(surPanel);
 		mainPanel1.add(surnamePanel);
+		
 		// Create the flight panel
 		JPanel flightcodePanel = new JPanel();
 		flightcodePanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
@@ -138,6 +139,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		flightcodePanel.add(flightcodeLabel);
 		flightcodePanel.add(flightPanel);
 		mainPanel1.add(flightcodePanel);
+		
 		// Create the destination panel
 		JPanel destinationPanel = new JPanel();
 		destinationPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
@@ -168,24 +170,29 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		weightPanel.add(weiPanel);
 		weightPanel.add(weighterrorPanel);
 		mainPanel1.add(weightPanel);
+		
 		// Create the dimension panel
 		JPanel dimensionsPanel = new JPanel();
 		dimensionsPanel.setLayout(new BoxLayout(dimensionsPanel, BoxLayout.Y_AXIS));
+		
 		//dimensions title
 		JPanel dimenLab =new JPanel();
 		dimenLab.setLayout(new FlowLayout(FlowLayout.LEADING,100,5));
 		dimensionsLabel= new JLabel("Baggage dimensions:");
 		dimensionsLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		dimenLab.add(dimensionsLabel);
+		
 		// informations about the dimensions
 		JPanel diminfLab =new JPanel();
 		diminfLab.setLayout(new FlowLayout(FlowLayout.LEADING,100,5));
 		dimensionsinfLabel= new JLabel("Please, add the dimensions of your suitcase in cm!!");
 		dimensionsinfLabel.setFont( new Font(Font.MONOSPACED, Font.ITALIC,13));
 		diminfLab.add(dimensionsinfLabel);
+		
 		//the three dimensions panel
 		JPanel lwhPanel =new JPanel();
 		lwhPanel.setLayout(new GridLayout(3,1));
+		
 		//make the length domain
 		JPanel lengthPanel = new JPanel();
 		lengthPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
@@ -202,6 +209,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		lengthPanel.add(lengthLabel);
 		lengthPanel.add(lenPanel);
 		lengthPanel.add(lengtherrorPanel);
+		
 		//make the  width domain
 		JPanel widthPanel = new JPanel();
 		widthPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
@@ -218,6 +226,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		widthPanel.add(widthLabel);
 		widthPanel.add(widPanel);
 		widthPanel.add(widtherrorPanel);
+		
 		//make the height domain
 		JPanel heightPanel = new JPanel();
 		heightPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
@@ -243,17 +252,14 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		dimensionsPanel.add(lwhPanel);
 		mainPanel1.add(dimensionsPanel);
 			
-		
-		
 		JPanel centerPanel = new JPanel();
         centerPanel.add(mainPanel1);
         this.add(centerPanel,BorderLayout.CENTER);
 	}
-/**
- * it handles the buttons Submit and Cancel.
- */
-
-
+	
+	/**
+	 * it handles the buttons Submit and Cancel.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -271,7 +277,6 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	 * Displaying error messages if we have errors
 	 */
 	private void checkGUI() {
-		// TODO Auto-generated method stub
 		String weightstr=Lweightinput.getText().trim();
 		String lengthstr=lengthinput.getText().trim();
 		String widthstr=widthinput.getText().trim();
@@ -287,16 +292,13 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		if (wei && len && wid && hei) {
 			if(!weipay || !lenpay || !widpay || !heipay) {
 				KioskPayment abc = new KioskPayment();
-			}
-			else {
-				
+			} else {
 				JOptionPane.showMessageDialog(null," Tkank you for checking in. Have a nice Flight " , 
 						" Information ",JOptionPane.INFORMATION_MESSAGE);
-				
 			}
-			
 		}
 	}
+	
 	/**
 	 * Checking the  weight input.
 	 * @param weightstr
@@ -310,18 +312,18 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		Double val;
 		try {
 	         val=Double.parseDouble(weightstr);
-	   }catch (NumberFormatException e){
+		}catch (NumberFormatException e){
 		   weighterrorDisplay.setText("not a number!");
 		   return false;
-	   } 
+		} 
 		if(val>maxWeight) {
 			weighterrorDisplay.setText("too heavy!");
 			return false;
 		}
 		
 		return true;
-		
 	}
+	
 	/**
 	 * Checking the  length input.
 	 * @param lengthstr
@@ -335,18 +337,18 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		int val;
 		try {
 	         val=Integer.parseInt(lengthstr);
-	   }catch (NumberFormatException e){
+		}catch (NumberFormatException e){
 		   lengtherrorDisplay.setText("not a number!");
 		   return false;
-	   } 
+		} 
 		if(val>maxDimension) {
 			lengtherrorDisplay.setText("too large!");
 			return false;
 		}
 		
 		return true;
-		
 	}
+	
 	/**
 	 * Checking the  width input.
 	 * @param widhtstr
@@ -360,18 +362,18 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		int val;
 		try {
 			val=Integer.parseInt(widhtstr);
-	   }catch (NumberFormatException e){
+		}catch (NumberFormatException e){
 		   widtherrorDisplay.setText("not a number!");
 		   return false;
-	   } 
+		} 
 		if(val>maxDimension) {
 			widtherrorDisplay.setText("too large!");
 			return false;
 		}
 		
 		return true;
-		
 	}
+	
 	/**
 	 * Checking the  height input.
 	 * @param heighttstr
@@ -395,8 +397,8 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		}
 		
 		return true;
-		
 	}
+	
 	/**
 	 * Checking the  weight input. if it exceeds our limits.
 	 * @param weightstr
@@ -409,6 +411,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		}
 		return false;	
 	}
+	
 	/**
 	 * Checking the  length input. if it exceeds our limits.
 	 * @param lengthstr
@@ -421,6 +424,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		}
 		return false;	
 	}
+	
 	/**
 	 * Checking the  width input. if it  exceeds our limits
 	 * @param widhtstr
@@ -433,6 +437,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		}
 		return false;	
 	}
+	
 	/**
 	 * Checking the  height input. if it  exceeds our limits
 	 * @param heighttstr

@@ -1,4 +1,4 @@
-package uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
+package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
 
 import static org.junit.Assert.*;
 
@@ -9,8 +9,8 @@ import java.util.Map.Entry;
 
 import org.junit.Test;
 
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Booking;
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BookingLoader;
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Booking;
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BookingLoader;
 
 public class BookingLoaderTester {
 	BookingLoader loader;
