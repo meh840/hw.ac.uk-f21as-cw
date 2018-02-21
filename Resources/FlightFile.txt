@@ -1,0 +1,3 @@
+FLN001,Dubai International,Heriot Airlines,35,100.0,100.0
+FLN002,Los Angeles International,Angus Airlines,100,150.0,150.0
+FLN003,Heathrow,Scottish Airlines,5,25.0,25.0
