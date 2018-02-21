@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BookingReferenceChecker;
 
-public class testBookingReferenceChecker {
+public class BookingReferenceCheckerTester {
 	private String correctFormat = "AA00AA0";
 	private String incorrectFormat1 = "0A00AA0";
 	private String incorrectFormat2 = "A000AA0";

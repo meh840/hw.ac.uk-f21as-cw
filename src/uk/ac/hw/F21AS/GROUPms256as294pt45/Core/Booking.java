@@ -4,15 +4,16 @@ public class Booking implements Comparable<Booking>{
 	private String bookingReference, flightCode, firstName, surname;
 	private boolean checkedIn;
 	private BaggageDetails baggageInfo;
+	
 	/**
 	 Constructor of Booking class.
 	*/
-	public Booking(String bookingReference, String flightCode, String firstName, String surname) {
+	public Booking(String bookingReference, String flightCode, String firstName, String surname, boolean checkedIn) {
 		this.bookingReference=bookingReference;
 		this.flightCode=flightCode;
 		this.firstName=firstName;
 		this.surname=surname;
-		checkedIn=false;
+		this.checkedIn=checkedIn;
 		baggageInfo=null;
 	}
 	
