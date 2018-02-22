@@ -11,6 +11,13 @@ import javax.swing.*;
  *
  */
 public class KioskCheckIn extends JFrame  implements ActionListener {
+<<<<<<< Updated upstream
+=======
+	
+	private FlightLoader flights;
+	private String RefNum;
+	private BookingLoader bookings;
+>>>>>>> Stashed changes
 	JButton cancel, submit;
 	JLabel refDisplay, firstDisplay,surnameDisplay,flightcodeDisplay , destinationDisplay,heighterrorDisplay,
 	widtherrorDisplay,lengtherrorDisplay,weighterrorDisplay;
@@ -29,11 +36,28 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	 * Constructor of the Kiosk GUI Check in class.
 	 * @param logic The kiosk logic which has the booking, flight & error logger.
 	 */
+<<<<<<< Updated upstream
 	public KioskCheckIn(KioskLogic logic) {
 		this.logic = logic;
 		booking = logic.CurrentCheckInBooking();
 		flight = logic.CurrentFlightDetails();
+=======
+<<<<<<< Updated upstream
+	public KioskCheckIn(Booking booking, String destination) {
+=======
+<<<<<<< Updated upstream
+	public KioskCheckIn(Booking booking) {
+>>>>>>> Stashed changes
+		this.booking = booking;
+		this.destination = destination;
+>>>>>>> Stashed changes
 		
+=======
+	public KioskCheckIn(FlightLoader flights, BookingLoader bookings, String RefNum) {
+		this.flights = flights;
+		this.RefNum=RefNum;
+    	this.bookings=bookings;
+>>>>>>> Stashed changes
     	setTitle("KIOSK");
     	setSize(800,800);
     	setResizable(true);
@@ -99,7 +123,11 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		refPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
 		refLabel= new JLabel("Reference Number");
 		refLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
+<<<<<<< Updated upstream
 		refDisplay= new JLabel(booking.GetBookingReference());
+=======
+		refDisplay= new JLabel(bookings.get(RefNum).GetBookingReference());
+>>>>>>> Stashed changes
 		refPanel.add(refLabel);
 		refPanel.add(refDisplay);
 		mainPanel1.add(refPanel);
@@ -111,7 +139,11 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		firstLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel firPanel = new JPanel();
 		firPanel.setLayout(new FlowLayout(FlowLayout.LEADING,78,10));
+<<<<<<< Updated upstream
 		firstDisplay= new JLabel(booking.GetFirstName());
+=======
+		firstDisplay= new JLabel("bookings.get(RefNum).GetFirstName()");
+>>>>>>> Stashed changes
 		firPanel.add(firstDisplay);
 		firstPanel.add(firstLabel);
 		firstPanel.add(firPanel);
@@ -124,7 +156,11 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		surnameLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel surPanel = new JPanel();
 		surPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+<<<<<<< Updated upstream
 		surnameDisplay= new JLabel(booking.GetSurname());
+=======
+		surnameDisplay= new JLabel("bookings.get(RefNum).GetSurname() ");
+>>>>>>> Stashed changes
 		surPanel.add(surnameDisplay);
 		surnamePanel.add(surnameLabel);
 		surnamePanel.add(surPanel);
@@ -137,7 +173,11 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		flightcodeLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel flightPanel = new JPanel();
 		flightPanel.setLayout(new FlowLayout(FlowLayout.LEADING,110,10));
+<<<<<<< Updated upstream
 		flightcodeDisplay= new JLabel(booking.GetFlightCode());
+=======
+		flightcodeDisplay= new JLabel("bookings.get(RefNum)GetFlightCode() ");
+>>>>>>> Stashed changes
 		flightPanel.add(flightcodeDisplay);
 		flightcodePanel.add(flightcodeLabel);
 		flightcodePanel.add(flightPanel);
