@@ -5,14 +5,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+* The class is an error storage.
+* It receive errors from Bookingloader and KioskSearch GUI and store them in a text file
+* @author Panagiotis Tsamoutalis (pt45)
+*
+*/
 public class ErrorLogger {
 	
 	private ArrayList <String> Error_List;
 	private ArrayList <String> Incorrect_Entries;
+	private ArrayList<String> unexpected_Errors;
 
+	/**
+	 * Constructor of the ErrorLogger class.
+	 * It creates 2 ArrayLists.
+	 * Error_List is the list for the KioskSearch errors.
+	 * Incorrect_Entries is the list for the incorrect entries.
+	 */
 	public ErrorLogger(){
 		Error_List = new ArrayList<String>() ;
 		Incorrect_Entries =new ArrayList <String>();
+		unexpected_Errors = new ArrayList<String>();
 	}
 	
 	 public int getSizeofEntry() {
@@ -22,6 +36,10 @@ public class ErrorLogger {
 	 public void addError(String person) 
 	    {
 		 Error_List.add(person);
+	    }
+	 public void addUnexpectedError(String er) 
+	    {
+		 unexpected_Errors.add(er);
 	    }
 	 
 	 public void addEntry(String booking) 
@@ -62,6 +80,14 @@ public class ErrorLogger {
 			instance += " \r\n";
 			instance += String.format("%s", "Unsuccessful tries \r\r\n");
 			for (String c  : Error_List){
+				instance += String.format("%-2s", c);
+				instance += "\r\n";
+			}
+			
+			instance += " \r\n";
+			instance += " \r\n";
+			instance += String.format("%s", "Unexpected Errors \r\r\n");
+			for (String c  : unexpected_Errors){
 				instance += String.format("%-2s", c);
 				instance += "\r\n";
 			}

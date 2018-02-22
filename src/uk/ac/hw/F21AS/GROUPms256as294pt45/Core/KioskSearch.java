@@ -169,8 +169,11 @@ public class KioskSearch extends JFrame  implements ActionListener{
 		boolean reference_checked = check_reference(refString);
 		
 		if (surname_checked==true && reference_checked==true)  {
+			// change the reference and surname inputs in the correct format
 			String ref = refString.toUpperCase();
-			if(logic.LocateBooking(ref, surString)) {
+			String s1 = surString.substring(0, 1).toUpperCase();
+			String surnamestring = s1 + surString.substring(1).toLowerCase();
+			if(logic.LocateBooking(ref, surnamestring)) {
 				abc=new KioskCheckIn(logic);
 				this.dispose();
 			} else {

@@ -38,21 +38,17 @@ public class KioskLogic {
 			bookings = bookingLoader.LoadBookings();
 			invalidFormatErrors = bookingLoader.GetErrors();
 		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			errorLogger.addUnexpectedError("Booking file triggered an NullPointerException");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			errorLogger.addUnexpectedError("Booking file triggered an IOException");
 		}
 		
 		try {
 			flights = flightLoader.LoadFlight();
 		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			errorLogger.addUnexpectedError("Flight file triggered an NullPointerException");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			errorLogger.addUnexpectedError("Flight file triggered an IOException");
 		}
 	}
 	
