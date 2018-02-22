@@ -1,6 +1,11 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
+/*
+ * Contains the baggage information: Weight, Length, Width and Height
+ * Weight in kg
+ * Dimensions in cm
+ * @author Mehdi Seddiq (ms256)
+ */
 
-//@author Mehdi Seddiq (ms256)
 public class BaggageDetails {
 	public double weight, length, width, height;//dimensions in cm
 	public double fee;
@@ -17,15 +22,18 @@ public class BaggageDetails {
 		this.width=width;
 		this.height=height;
 }
-
+	//gives the weight
 	public double Weight(){
 		return weight;
 	}
 	
+	//Calculates and return the Volume
 	public double Volume(){
 		return (length*width*height);
 	}
 	
+	//Calculates the fee due to extra weight or longer dimensions
+	//length, width and height have different values for the free of charge limits 
 	public double Fee(){
 		double L, W, H, fee=0, temp;  //L: the greatest dimension, H: the smallest dimension, W: the dimension in the middle  
 		L=length; W=width; H=height;
@@ -54,6 +62,7 @@ public class BaggageDetails {
 		return fee;
 	}
 	
+	//returns a String containing baggage information
 	@Override
 	public String toString() {
 		return "" + weight + length + width + height;

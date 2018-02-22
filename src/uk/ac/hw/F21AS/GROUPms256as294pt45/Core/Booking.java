@@ -1,12 +1,23 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
-
+/*
+ * This class holds the booking information of passenger as well as methods 
+ * to process the information.
+ * @author Mehdi Seddiq (ms256)  
+ */
 public class Booking implements Comparable<Booking>{
-	private String bookingReference, flightCode, firstName, surname;
-	private boolean checkedIn;
+	private String bookingReference, flightCode; //bookingReference and flightCode follow specified formats
+	private String firstName, surname;
+	private boolean checkedIn;  // shows whether the passenger has successfully checked-in.
 	private BaggageDetails baggageInfo;
 	
 	/**
-	 Constructor of Booking class.
+	 * Constructor of Booking class.
+	 * @param bookingReference: Unique code for a certain booking
+	 * @param flightCode: Unique code for a certain flight
+	 * @param firstName: First Name of passenger
+	 * @param surname: Last Name of passenger
+	 * @param checkedIn: 
+	 * @param baggageInfo
 	*/
 	public Booking(String bookingReference, String flightCode, String firstName, String surname, boolean checkedIn) {
 		this.bookingReference=bookingReference;

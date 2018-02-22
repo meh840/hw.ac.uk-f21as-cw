@@ -1,4 +1,9 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
+/*
+ * Appears at when all passengers have checked-in. 
+ * It shows a summary of all flights information. 
+ * @author Mehdi Seddiq (ms256)
+ */
 import java.awt.*;
 import java.util.Map;
 import java.util.TreeMap;

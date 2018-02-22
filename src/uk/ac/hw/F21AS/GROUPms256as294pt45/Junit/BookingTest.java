@@ -1,4 +1,8 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
+/*
+ * 
+ * @author Mehdi Seddiq (ms256)
+ */
 
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -13,7 +17,6 @@ public class BookingTest {
 	public void setUp() {
 		baggageInfo1= new BaggageDetails(10.0, 1.0, 0.8, 0.4); 
 		baggageInfo2= new BaggageDetails(0.0, 0.0, 0.0, 0.0);
-		// bookingReference, flightCode, firstName, surname, checkedIn 
 		booking1 = new Booking("VT48QB7", "FLU999", "Dieter", "Muller", false);
 		booking1.SetBaggageInfo(baggageInfo1);
 		booking2 = new Booking("VT48QB7", "FLU999", "Dieter", "Muller", false);

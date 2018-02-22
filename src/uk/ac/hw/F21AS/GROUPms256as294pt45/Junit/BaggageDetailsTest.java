@@ -1,5 +1,8 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
-
+/*
+ * 
+ * @author Mehdi Seddiq (ms256)
+ */
 import static org.junit.Assert.*;
 
 import org.junit.Before;
