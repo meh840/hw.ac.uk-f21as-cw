@@ -4,8 +4,9 @@ package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
 public class BaggageDetails {
 	public double weight, length, width, height;//dimensions in cm
 	public double fee;
-	public static final double FREE_DIM=190.0; //unit: cm, inspired from: British Airways
-	public static final double FREE_WEIGHT=32.0; //unit: kg, inspired from: British Airways
+	//All dimensions are in cm, free of charge values are inspired from British Airways
+	public static final double FREE_LENGTH=190, FREE_WIDTH=75, FREE_HEIGHT=65;
+	public static final double FREE_WEIGHT=32.0; //Weight is in kg, free of charge weight inspired from British Airways
 	
 	/*
 	Constructor of BaggageDetails class.
@@ -26,17 +27,26 @@ public class BaggageDetails {
 	}
 	
 	public double Fee(){
-		double maxDim, fee=0;
-		maxDim=Math.max(length,width);
-		maxDim=Math.max(maxDim,height);
-		if (length>FREE_DIM){
-			fee+=0.20*(length-FREE_DIM);
+		double L, W, H, fee=0, temp;  //L: the greatest dimension, H: the smallest dimension, W: the dimension in the middle  
+		L=length; W=width; H=height;
+		if (W>L){
+			temp=L; L=W; W=temp;
 		}
-		if (width>FREE_DIM){
-			fee+=0.20*(width-FREE_DIM);
+		if (H>L){
+			temp=L; L=W; W=temp;
+		}
+		if (H>W){
+			temp=H; H=W; W=temp;
+		}
+		//now L>=W>=H
+		if (length>FREE_LENGTH){
+			fee+=0.20*(length-FREE_LENGTH);
+		}
+		if (width>FREE_WIDTH){
+			fee+=0.20*(width-FREE_WIDTH);
 		}		
-		if (height>FREE_DIM){
-			fee+=0.20*(height-FREE_DIM);
+		if (height>FREE_HEIGHT){
+			fee+=0.20*(height-FREE_HEIGHT);
 		}		
 		if (weight>FREE_WEIGHT){
 			fee+=8.0*(weight-FREE_WEIGHT);
