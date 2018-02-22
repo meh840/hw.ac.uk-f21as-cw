@@ -17,10 +17,8 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	JLabel title, refLabel, firstLabel,surnameLabel, flightcodeLabel, destinationLabel, LweightLabel, 
 	dimensionsLabel, lengthLabel, widthLabel, heightLabel,dimensionsinfLabel;
 	JTextField Lweightinput, lengthinput, widthinput, heightinput;
-	double maxWeight=100.00;
-	double limitWeight=32.00;
-	int maxDimension=200;
-	int limitDimension=110;
+	double maxWeight=120.00;
+	int maxDimension=260;
 	private Booking booking;
 	private Flight flight;
 	private KioskLogic logic;
@@ -96,21 +94,25 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		
 		// Create the reference number panel
 		JPanel refPanel = new JPanel();
-		refPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+		refPanel.setLayout(new FlowLayout(FlowLayout.LEADING,90,10));
 		refLabel= new JLabel("Reference Number");
+		JPanel refPanel1 = new JPanel();
+		refPanel1.setLayout(new FlowLayout(FlowLayout.LEADING,10,10));
 		refLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		refDisplay= new JLabel(booking.GetBookingReference());
+		refPanel1.add(refDisplay);
 		refPanel.add(refLabel);
-		refPanel.add(refDisplay);
+		refPanel.add(refPanel1);
 		mainPanel1.add(refPanel);
+		
 		
 		// Create the firstname panel
 		JPanel firstPanel = new JPanel();
-		firstPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+		firstPanel.setLayout(new FlowLayout(FlowLayout.LEADING,90,10));
 		firstLabel= new JLabel("Firstname");
 		firstLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel firPanel = new JPanel();
-		firPanel.setLayout(new FlowLayout(FlowLayout.LEADING,78,10));
+		firPanel.setLayout(new FlowLayout(FlowLayout.LEADING,90,10));
 		firstDisplay= new JLabel(booking.GetFirstName());
 		firPanel.add(firstDisplay);
 		firstPanel.add(firstLabel);
@@ -119,11 +121,11 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		
 		// Create the surname panel
 		JPanel surnamePanel = new JPanel();
-		surnamePanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+		surnamePanel.setLayout(new FlowLayout(FlowLayout.LEADING,90,10));
 		surnameLabel= new JLabel("Surname");
 		surnameLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel surPanel = new JPanel();
-		surPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+		surPanel.setLayout(new FlowLayout(FlowLayout.LEADING,115,10));
 		surnameDisplay= new JLabel(booking.GetSurname());
 		surPanel.add(surnameDisplay);
 		surnamePanel.add(surnameLabel);
@@ -132,11 +134,11 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		
 		// Create the flight panel
 		JPanel flightcodePanel = new JPanel();
-		flightcodePanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+		flightcodePanel.setLayout(new FlowLayout(FlowLayout.LEADING,90,10));
 		flightcodeLabel= new JLabel("Flight");
 		flightcodeLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel flightPanel = new JPanel();
-		flightPanel.setLayout(new FlowLayout(FlowLayout.LEADING,110,10));
+		flightPanel.setLayout(new FlowLayout(FlowLayout.LEADING,125,10));
 		flightcodeDisplay= new JLabel(booking.GetFlightCode());
 		flightPanel.add(flightcodeDisplay);
 		flightcodePanel.add(flightcodeLabel);
@@ -145,7 +147,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		
 		// Create the destination panel
 		JPanel destinationPanel = new JPanel();
-		destinationPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+		destinationPanel.setLayout(new FlowLayout(FlowLayout.LEADING,90,10));
 		destinationLabel= new JLabel("Destination");
 		destinationLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel destPanel = new JPanel();
@@ -158,7 +160,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		
 		// Create the baggage weight panel
 		JPanel weightPanel = new JPanel();
-		weightPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+		weightPanel.setLayout(new FlowLayout(FlowLayout.LEADING,90,10));
 		LweightLabel= new JLabel("Baggage weight");
 		LweightLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel weiPanel = new JPanel();
@@ -166,7 +168,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		Lweightinput= new JTextField(9);
 		JPanel weighterrorPanel = new JPanel();
 		weighterrorPanel.setLayout(new FlowLayout(FlowLayout.LEADING,20,10));
-		weighterrorDisplay= new JLabel("Baggage weight");
+		weighterrorDisplay= new JLabel("");
 		weighterrorPanel.add(weighterrorDisplay);
 		weiPanel.add(Lweightinput);
 		weightPanel.add(LweightLabel);
@@ -180,14 +182,14 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		
 		//dimensions title
 		JPanel dimenLab =new JPanel();
-		dimenLab.setLayout(new FlowLayout(FlowLayout.LEADING,100,5));
+		dimenLab.setLayout(new FlowLayout(FlowLayout.LEADING,90,5));
 		dimensionsLabel= new JLabel("Baggage dimensions:");
 		dimensionsLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		dimenLab.add(dimensionsLabel);
 		
 		// informations about the dimensions
 		JPanel diminfLab =new JPanel();
-		diminfLab.setLayout(new FlowLayout(FlowLayout.LEADING,100,5));
+		diminfLab.setLayout(new FlowLayout(FlowLayout.LEADING,90,5));
 		dimensionsinfLabel= new JLabel("Please, add the dimensions of your suitcase in cm!!");
 		dimensionsinfLabel.setFont( new Font(Font.MONOSPACED, Font.ITALIC,13));
 		diminfLab.add(dimensionsinfLabel);
@@ -198,15 +200,15 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		
 		//make the length domain
 		JPanel lengthPanel = new JPanel();
-		lengthPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+		lengthPanel.setLayout(new FlowLayout(FlowLayout.LEADING,90,10));
 		lengthLabel= new JLabel("Length");
 		lengthLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel lenPanel = new JPanel();
-		lenPanel.setLayout(new FlowLayout(FlowLayout.LEADING,120,10));
+		lenPanel.setLayout(new FlowLayout(FlowLayout.LEADING,50,10));
 		lengthinput= new JTextField(9);
 		JPanel lengtherrorPanel = new JPanel();
-		lengtherrorPanel.setLayout(new FlowLayout(FlowLayout.LEADING,20,10));
-		lengtherrorDisplay= new JLabel("Length");
+		lengtherrorPanel.setLayout(new FlowLayout(FlowLayout.LEADING,5,10));
+		lengtherrorDisplay= new JLabel("");
 		lengtherrorPanel.add(lengtherrorDisplay);
 		lenPanel.add(lengthinput);
 		lengthPanel.add(lengthLabel);
@@ -215,15 +217,15 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		
 		//make the  width domain
 		JPanel widthPanel = new JPanel();
-		widthPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+		widthPanel.setLayout(new FlowLayout(FlowLayout.LEADING,90,10));
 		widthLabel= new JLabel("Width");
 		widthLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel widPanel = new JPanel();
-		widPanel.setLayout(new FlowLayout(FlowLayout.LEADING,130,10));
+		widPanel.setLayout(new FlowLayout(FlowLayout.LEADING,60,10));
 		widthinput= new JTextField(9);
 		JPanel widtherrorPanel = new JPanel();
-		widtherrorPanel.setLayout(new FlowLayout(FlowLayout.LEADING,20,10));
-		widtherrorDisplay= new JLabel("Width");
+		widtherrorPanel.setLayout(new FlowLayout(FlowLayout.LEADING,0,10));
+		widtherrorDisplay= new JLabel("");
 		widtherrorPanel.add(widtherrorDisplay);
 		widPanel.add(widthinput);
 		widthPanel.add(widthLabel);
@@ -232,15 +234,15 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		
 		//make the height domain
 		JPanel heightPanel = new JPanel();
-		heightPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
+		heightPanel.setLayout(new FlowLayout(FlowLayout.LEADING,90,10));
 		heightLabel= new JLabel("Height");
 		heightLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel heigPanel = new JPanel();
-		heigPanel.setLayout(new FlowLayout(FlowLayout.LEADING,120,10));
+		heigPanel.setLayout(new FlowLayout(FlowLayout.LEADING,50,10));
 		heightinput= new JTextField(9);
 		JPanel heiErrorPanel = new JPanel();
-		heiErrorPanel.setLayout(new FlowLayout(FlowLayout.LEADING,20,10));
-		heighterrorDisplay= new JLabel("dfdg");
+		heiErrorPanel.setLayout(new FlowLayout(FlowLayout.LEADING,5,10));
+		heighterrorDisplay= new JLabel("");
 		heiErrorPanel.add(heighterrorDisplay);
 		heigPanel.add(heightinput);
 		heightPanel.add(heightLabel);
@@ -266,6 +268,10 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == submit) {
+    		weighterrorDisplay.setText("");
+    		lengtherrorDisplay.setText("");
+    		widtherrorDisplay.setText("");
+    		heighterrorDisplay.setText("");
     		checkGUI();
     	}
 		else if (e.getSource() == cancel) {
@@ -299,6 +305,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 			if(bag.Fee() > 0.0) {
 				logic.AwaitingPayment(bag);
 				KioskPayment abc = new KioskPayment(logic);
+				this.dispose();
 			} else {
 				booking.SetBaggageInfo(bag);
 				booking.CheckIn();
@@ -309,6 +316,8 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 				
 				JOptionPane.showMessageDialog(null," Tkank you for checking in. Have a nice Flight " , 
 						" Information ",JOptionPane.INFORMATION_MESSAGE);
+				KioskSearch abc= new KioskSearch(logic);
+				this.dispose();
 			}
 		}
 	}
