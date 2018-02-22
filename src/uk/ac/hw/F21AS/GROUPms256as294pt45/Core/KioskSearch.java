@@ -160,6 +160,8 @@ public class KioskSearch extends JFrame  implements ActionListener{
 	 * 
 	 */
 	private void search() {
+		errordisplay1.setText("");
+		errordisplay2.setText("");
 		String refString = refinput.getText().trim();
 		String surString = surnameinput.getText().trim();
 		
@@ -167,11 +169,13 @@ public class KioskSearch extends JFrame  implements ActionListener{
 		boolean reference_checked = check_reference(refString);
 		
 		if (surname_checked==true && reference_checked==true)  {
-			if(logic.LocateBooking(refString, surString)) {
+			String ref = refString.toUpperCase();
+			if(logic.LocateBooking(ref, surString)) {
 				abc=new KioskCheckIn(logic);
-				System.exit(0);
+				this.dispose();
 			} else {
-				errordisplay1.setText("No match for details given. Please try again or see our staffed check in desks.");
+				JOptionPane.showMessageDialog(this, "No match for details given."+"\n"+ "Please try again or see our staffed check in desks.");
+				//errordisplay1.setText("No match for details given. Please try again or see our staffed check in desks.");
 				String error = "Details do not match with a booking: " + refString + "," + surString;
 				logic.AddCheckInError(error);
 			}
@@ -227,12 +231,6 @@ public class KioskSearch extends JFrame  implements ActionListener{
 	        	return false;
 	        }
 		}    
-		
-		for(char c : refString.toCharArray()) {
-			refArray[counter]=c;
-			counter++;
-		}
-		
 		if(!BookingReferenceChecker.CheckABookingReference(refString)) {
 			errordisplay1.setText("Your Reference Number is incorrect !");
         	return false;
