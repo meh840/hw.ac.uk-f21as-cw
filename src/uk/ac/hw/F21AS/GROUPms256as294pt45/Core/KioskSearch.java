@@ -174,8 +174,12 @@ public class KioskSearch extends JFrame  implements ActionListener{
 		if (surname_checked==true && reference_checked==true)  {
 			Booking booking = GetReferencedBooking(refString, surString);
 			if(booking != null) {
-				
-				abc=new KioskCheckIn();
+				Flight flight = flights.get(booking.GetFlightCode());
+				abc=new KioskCheckIn(booking, flight.Destination());
+			} else {
+				errordisplay1.setText("No match for details given. Please try again or see our staffed check in desks.");
+				String error = "Details do not match with a booking: " + refString + "," + surString;
+				ErrorList.addError(error);
 			}
 		} else {
 			String Errorrep = ErrorReport();
@@ -183,10 +187,18 @@ public class KioskSearch extends JFrame  implements ActionListener{
 		}
 	}
 	
+	/**
+	 * Gets booking that matches collected details.
+	 * @param reference Booking code for passenger.
+	 * @param surname Surname used in booking.
+	 * @return Matching booking or null if no matching booking reference found.
+	 */
 	private Booking GetReferencedBooking(String reference, String surname) {
 		Booking searchResult = bookings.get(reference);
 		if(searchResult != null) {
-			if(surname.equals(searchResult.))
+			if(surname.equals(searchResult.GetSurname())) {
+				return searchResult;
+			}
 		}
 		
 		return null;

@@ -6,6 +6,7 @@ public class AirportKiosk {
 		KioskController kiosk = new KioskController();
 		
 		kiosk.ReadyKiosk();
+		kiosk.StartUpKiosk();
 	}
 
 }

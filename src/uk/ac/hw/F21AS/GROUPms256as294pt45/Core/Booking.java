@@ -54,11 +54,16 @@ public class Booking implements Comparable<Booking>{
 	 * compares the Booking object given in argument with this Bookings based on their BookingReference
 	 */
 	public int compareTo(Booking anotherBooking) {
-		return bookingReference.compareTo(anotherBooking.bookingReference);
+		return bookingReference.compareTo(anotherBooking.GetBookingReference());
 	}
 	
 	@Override
 	public String toString() {
+		String strCheckedIn=String.valueOf(checkedIn);
+		return ("" + bookingReference + "," + flightCode + "," + firstName + "," + surname + "," + strCheckedIn);
+	}
+	
+	public String SummaryString() {
 		String strCheckedIn=String.valueOf(checkedIn);
 		return ("" + bookingReference + "," + flightCode + "," + firstName + "," + surname + "," + strCheckedIn + "," + baggageInfo.weight + "," + baggageInfo.length + "," + baggageInfo.width + "," + baggageInfo.height);
 	}

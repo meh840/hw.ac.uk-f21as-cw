@@ -22,13 +22,15 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	int maxDimension=200;
 	int limitDimension=110;
 	Booking booking;
+	String destination;
 	
 	/**
 	 * Constructor of the Kiosk GUI Check in class.
 	 * @param flightlist from FlightLoader.
 	 */
-	public KioskCheckIn(Booking booking) {
+	public KioskCheckIn(Booking booking, String destination) {
 		this.booking = booking;
+		this.destination = destination;
 		
     	setTitle("KIOSK");
     	setSize(800,800);
@@ -70,7 +72,6 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	 * @return A label as the title of the GUI
 	 */
 	private void setupNorthPanel() {
-		// TODO Auto-generated method stub
 		JPanel titlePanel = new JPanel();
 		title = new JLabel("CHECK IN");
 		title.setFont( new Font(Font.MONOSPACED, Font.BOLD,30));
@@ -96,7 +97,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		refPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
 		refLabel= new JLabel("Reference Number");
 		refLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
-		refDisplay= new JLabel("GetBookingReference()");
+		refDisplay= new JLabel(booking.GetBookingReference());
 		refPanel.add(refLabel);
 		refPanel.add(refDisplay);
 		mainPanel1.add(refPanel);
@@ -108,7 +109,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		firstLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel firPanel = new JPanel();
 		firPanel.setLayout(new FlowLayout(FlowLayout.LEADING,78,10));
-		firstDisplay= new JLabel("GetFirstName()");
+		firstDisplay= new JLabel(booking.GetFirstName());
 		firPanel.add(firstDisplay);
 		firstPanel.add(firstLabel);
 		firstPanel.add(firPanel);
@@ -121,7 +122,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		surnameLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel surPanel = new JPanel();
 		surPanel.setLayout(new FlowLayout(FlowLayout.LEADING,100,10));
-		surnameDisplay= new JLabel("GetSurname() ");
+		surnameDisplay= new JLabel(booking.GetSurname());
 		surPanel.add(surnameDisplay);
 		surnamePanel.add(surnameLabel);
 		surnamePanel.add(surPanel);
@@ -134,7 +135,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		flightcodeLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel flightPanel = new JPanel();
 		flightPanel.setLayout(new FlowLayout(FlowLayout.LEADING,110,10));
-		flightcodeDisplay= new JLabel("GetFlightCode() ");
+		flightcodeDisplay= new JLabel(booking.GetFlightCode());
 		flightPanel.add(flightcodeDisplay);
 		flightcodePanel.add(flightcodeLabel);
 		flightcodePanel.add(flightPanel);
@@ -147,7 +148,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		destinationLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel destPanel = new JPanel();
 		destPanel.setLayout(new FlowLayout(FlowLayout.LEADING,60,10));
-		destinationDisplay= new JLabel("fgdh");
+		destinationDisplay= new JLabel(destination);
 		destPanel.add(destinationDisplay);
 		destinationPanel.add(destinationLabel);
 		destinationPanel.add(destPanel);
@@ -262,7 +263,6 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getSource() == submit) {
     		checkGUI();
     	}

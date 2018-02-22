@@ -2,17 +2,15 @@ package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Junit;
 
 import static org.junit.Assert.*;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
-
-import uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
 
 public class BaggageDetailsTest {
 	private BaggageDetails baggageInfo1, baggageInfo2, baggageInfo3, baggageInfo4;
 	
-	@BeforeClass
-	public void setUpBeforeClass() throws Exception {
+	@Before
+	public void setUpBeforeClass() {
 		baggageInfo1 = new BaggageDetails(BaggageDetails.FREE_WEIGHT,0,0,0);
 		baggageInfo2=new BaggageDetails(0,0,0,BaggageDetails.FREE_DIM);
 		baggageInfo3=new BaggageDetails(BaggageDetails.FREE_WEIGHT+1.0,0,0,0);
@@ -38,7 +36,7 @@ public class BaggageDetailsTest {
 		assertEquals(error3, expected3, actual3,DELTA_FEE);
 		
 		String error4 = "Wrong Fee for Dimensions \n";
-		double expected4=40.0;
+		double expected4=0.2;
 		double actual4=baggageInfo4.Fee();
 		assertEquals(error4, expected4, actual4,DELTA_FEE);		
 	}

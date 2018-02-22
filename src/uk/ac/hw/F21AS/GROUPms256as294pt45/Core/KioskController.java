@@ -61,6 +61,8 @@ public class KioskController {
 			}
 		}
 		
-		KioskSearch kiosk = new KioskSearch(bookings, flights, errorLogger);
+		//KioskSearch kiosk = new KioskSearch(bookings, flights, errorLogger);
+		
+		//SummaryGUI summary = new SummaryGUI(flights);
 	}
 }

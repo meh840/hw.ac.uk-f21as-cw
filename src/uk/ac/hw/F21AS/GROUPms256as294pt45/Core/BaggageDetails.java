@@ -1,10 +1,12 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
+
 //@author Mehdi Seddiq (ms256)
 public class BaggageDetails {
 	public double weight, length, width, height;//dimensions in cm
 	public double fee;
 	public static final double FREE_DIM=190.0; //unit: cm, inspired from: British Airways
 	public static final double FREE_WEIGHT=32.0; //unit: kg, inspired from: British Airways
+	
 	/*
 	Constructor of BaggageDetails class.
 	*/
@@ -40,5 +42,10 @@ public class BaggageDetails {
 			fee+=8.0*(weight-FREE_WEIGHT);
 		}
 		return fee;
+	}
+	
+	@Override
+	public String toString() {
+		return "" + weight + length + width + height;
 	}
 }
