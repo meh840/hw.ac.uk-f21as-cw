@@ -8,19 +8,23 @@ import javax.swing.*;
 public class SummaryGUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	JTextArea infoArea = new JTextArea(6, 20);
+	JTextArea infoArea = new JTextArea(40, 40);
 	
 	//constructor	
     public SummaryGUI(TreeMap<String, Flight> flights) {
-    	String titleRow,FlightInfo="";
-    	titleRow="FlightCode, DestinationAirport, Carrier, maxPassengerCapacity, maxWeight, maxVolume";
-    	//Set text scrolling and border
-    	infoArea.setText(titleRow);
-    	//"" + flightCode + "," + destinationAirport + "," + carrier + "," + maxPassengerCapacity + "," + maxWeight + "," + maxVolume;
+    	String titleRow="";
+    	StringBuffer FlightInfo = new StringBuffer();
+    	titleRow="Summary of the Flights"+ '\n'+'\n';
+    	FlightInfo.append(titleRow);
+    	
     	for (Map.Entry<String, Flight> entry: flights.entrySet()) {
-    		FlightInfo=entry.getValue().SummaryString()+"\n";
-    		infoArea.setText(FlightInfo);
+    		FlightInfo.append(entry.getValue().SummaryString());
     	}
+    	String Final=FlightInfo.toString();
+    	infoArea.setFont(new Font (Font.MONOSPACED, Font.PLAIN,12));
+    	infoArea.setEditable(false);
+    	infoArea.setText(Final);
+    	//Set text scrolling and border
         JScrollPane scrollingArea = new JScrollPane(infoArea);
         
         //Get the content pane, set layout and add to centre
@@ -31,7 +35,8 @@ public class SummaryGUI extends JFrame{
         //Set window characteristics
         this.setContentPane(content);
         this.setTitle("Summary of the Flights");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.pack();
+        this.setVisible(true);
     }
 }

@@ -288,17 +288,17 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		String weightstr=Lweightinput.getText().trim();
 		String lengthstr=lengthinput.getText().trim();
 		String widthstr=widthinput.getText().trim();
-		String heighttstr=heightinput.getText().trim();
+		String heightstr=heightinput.getText().trim();
 		boolean wei=CheckWeight(weightstr);
 		boolean len=CheckLength(lengthstr);
 		boolean wid=CheckWidth(widthstr);
-		boolean hei=CheckHeight(heighttstr);
+		boolean hei=CheckHeight(heightstr);
 		
 		if (wei && len && wid && hei) {
 			double weight = Double.parseDouble(weightstr);
 			double length = Double.parseDouble(lengthstr);
 			double width = Double.parseDouble(widthstr);
-			double height = Double.parseDouble(heighttstr);
+			double height = Double.parseDouble(heightstr);
 			
 			BaggageDetails bag = new  BaggageDetails(weight, length, width, height);
 			
@@ -357,9 +357,9 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 			lengtherrorDisplay.setText("is empty!");
 			return false;
 		}
-		int val;
+		double val;
 		try {
-	         val=Integer.parseInt(lengthstr);
+			val=Double.parseDouble(lengthstr);
 		}catch (NumberFormatException e){
 		   lengtherrorDisplay.setText("not a number!");
 		   return false;
@@ -374,17 +374,17 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	
 	/**
 	 * Checking the  width input.
-	 * @param widhtstr
+	 * @param widthstr
 	 * @return True or False
 	 */
-	private boolean CheckWidth(String widhtstr){
-		if (widhtstr == null || widhtstr.isEmpty()) {
+	private boolean CheckWidth(String widthstr){
+		if (widthstr == null || widthstr.isEmpty()) {
 			widtherrorDisplay.setText("is empty!");
 			return false;
 		}
-		int val;
+		double val;
 		try {
-			val=Integer.parseInt(widhtstr);
+			val=Double.parseDouble(widthstr);
 		}catch (NumberFormatException e){
 		   widtherrorDisplay.setText("not a number!");
 		   return false;
@@ -399,17 +399,17 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	
 	/**
 	 * Checking the  height input.
-	 * @param heighttstr
+	 * @param heightstr
 	 * @return
 	 */
-	private boolean CheckHeight(String heighttstr){
-		if (heighttstr == null || heighttstr.isEmpty()) {
+	private boolean CheckHeight(String heightstr){
+		if (heightstr == null || heightstr.isEmpty()) {
 			heighterrorDisplay.setText("is empty!");
 			return false;
 		}
-		int val;
+		double val;
 		try {
-			val=Integer.parseInt(heighttstr);
+			val=Double.parseDouble(heightstr);
 	   }catch (NumberFormatException e){
 		   heighterrorDisplay.setText("not a number!");
 		   return false;

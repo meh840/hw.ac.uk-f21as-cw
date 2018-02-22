@@ -146,6 +146,41 @@ public class Flight implements Comparable<Flight>{
 	 * @return Summary information.
 	 */
 	public String SummaryString() {
-		return ("" + flightCode + "," + destinationAirport + "," + carrier + "," + maxPassengerCapacity + "," + maxWeight + "," + totalWeight + "," + maxVolume + "," + totalVolume + "," + totalFeeAccumulated);
+		StringBuffer registers = new StringBuffer();
+		registers.append("FlightCode:  ");
+		registers.append(flightCode);
+        registers.append('\n');
+        registers.append("Destination: ");
+        registers.append(destinationAirport);
+        registers.append('\n');
+        registers.append("Carrier:  ");
+        registers.append(carrier);
+        registers.append('\n');
+        registers.append("Max Passenger Capacity:  ");
+        registers.append(maxPassengerCapacity);
+        registers.append('\n');
+        registers.append("Max Weight:  ");
+        registers.append(maxWeight);
+        registers.append("  Kg");
+        registers.append('\n');
+        registers.append("Total Weight:  ");
+        registers.append(totalWeight);
+        registers.append("  Kg");
+        registers.append('\n');
+        registers.append("Max Volume:  ");
+        registers.append(maxVolume);
+        registers.append("  cm3");
+        registers.append('\n');
+        registers.append("Total Volume:  ");
+        registers.append(totalVolume);
+        registers.append("  cm3");
+        registers.append('\n');
+        registers.append("Total Fee Accumulated:  ");
+        registers.append(totalFeeAccumulated);
+        registers.append("  £");
+        registers.append('\n');
+        registers.append('\n');
+		//return ("" + flightCode + "," + destinationAirport + "," + carrier + "," + maxPassengerCapacity + "," + maxWeight + "," + totalWeight + "," + maxVolume + "," + totalVolume + "," + totalFeeAccumulated);
+		return registers.toString();
 	}
 }
