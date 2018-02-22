@@ -13,14 +13,7 @@ import javax.swing.*;
  *
  */
 public class KioskSearch extends JFrame  implements ActionListener{
-<<<<<<< Updated upstream
 	private KioskLogic logic;
-=======
-	private TreeMap<String, Flight> flights;
-	private TreeMap<String, Booking> bookings;
-	private ErrorLogger ErrorList;
-	private BookingLoader bookings;
->>>>>>> Stashed changes
 	private int referenceSize=7;
 	JButton close, search,SumGui;
 	JTextField refinput, surnameinput, errordisplay1, errordisplay2;
@@ -31,23 +24,9 @@ public class KioskSearch extends JFrame  implements ActionListener{
 	 * Constructor of the Kiosk GUI search engine class.
 	 * @param logic The kiosk logic which has the booking, flight & error logger.
 	 */
-<<<<<<< Updated upstream
 	public KioskSearch(KioskLogic logic) {
 		this.logic = logic;
-=======
-<<<<<<< Updated upstream
-	public KioskSearch(TreeMap<String, Booking> bookings, TreeMap<String, Flight> flights,ErrorLogger ErrorList) {
-		this.bookings = bookings;
-    	this.flights = flights;
-    	this.ErrorList = ErrorList;
->>>>>>> Stashed changes
     	
-=======
-	public KioskSearch(FlightLoader flights,ErrorLogger ErrorList, BookingLoader bookings) {
-    	this.flights = flights;
-    	this.ErrorList=ErrorList;
-    	this.bookings=bookings;
->>>>>>> Stashed changes
     	setTitle("KIOSK");
     	setSize(800,450);
     	setResizable(true);
@@ -186,7 +165,6 @@ public class KioskSearch extends JFrame  implements ActionListener{
 		
 		boolean surname_checked = check_surname(surString);
 		boolean reference_checked = check_reference(refString);
-<<<<<<< Updated upstream
 		
 		if (surname_checked==true && reference_checked==true)  {
 			if(logic.LocateBooking(refString, surString)) {
@@ -200,20 +178,6 @@ public class KioskSearch extends JFrame  implements ActionListener{
 		} else {
 			logic.AddCheckInError(ErrorReport());
 		}
-=======
-		if (surname_checked ==true && reference_checked==true)  {
-			if(bookings.containsKey(refinput) && bookings.get(refinput).GetSurname().Equals(surnameinput)) {
-				abc=new KioskCheckIn(flights,bookings,refinput);
-			}else {
-				
-			}
-			
-			 
-		 }else {
-			 String Errorrep = ErrorReport();
-			 ErrorList.addError(Errorrep);
-		 }
->>>>>>> Stashed changes
 	}
 	
 	/**
