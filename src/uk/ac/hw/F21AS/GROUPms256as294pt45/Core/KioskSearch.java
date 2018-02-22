@@ -13,9 +13,7 @@ import javax.swing.*;
  *
  */
 public class KioskSearch extends JFrame  implements ActionListener{
-	private TreeMap<String, Flight> flights;
-	private TreeMap<String, Booking> bookings;
-	private ErrorLogger ErrorList;
+	private KioskLogic logic;
 	private int referenceSize=7;
 	JButton close, search,SumGui;
 	JTextField refinput, surnameinput, errordisplay1, errordisplay2;
@@ -24,13 +22,10 @@ public class KioskSearch extends JFrame  implements ActionListener{
 	
 	/**
 	 * Constructor of the Kiosk GUI search engine class.
-	 * @param flightlist from FlightLoader.
-	 * @param ErrosList from ErrorLogger.
+	 * @param logic The kiosk logic which has the booking, flight & error logger.
 	 */
-	public KioskSearch(TreeMap<String, Booking> bookings, TreeMap<String, Flight> flights,ErrorLogger ErrorList) {
-		this.bookings = bookings;
-    	this.flights = flights;
-    	this.ErrorList = ErrorList;
+	public KioskSearch(KioskLogic logic) {
+		this.logic = logic;
     	
     	setTitle("KIOSK");
     	setSize(800,450);
@@ -156,7 +151,7 @@ public class KioskSearch extends JFrame  implements ActionListener{
     		JOptionPane.showMessageDialog(this, " thank you ");
     		System.exit(0);
     	} else if (e.getSource()==SumGui) {
-    		
+    		SummaryGUI summary = new SummaryGUI(logic.GetAllFlights());
     	}
 	}
 
@@ -172,36 +167,17 @@ public class KioskSearch extends JFrame  implements ActionListener{
 		boolean reference_checked = check_reference(refString);
 		
 		if (surname_checked==true && reference_checked==true)  {
-			Booking booking = GetReferencedBooking(refString, surString);
-			if(booking != null) {
-				Flight flight = flights.get(booking.GetFlightCode());
-				abc=new KioskCheckIn(booking, flight.Destination());
+			if(logic.LocateBooking(refString, surString)) {
+				abc=new KioskCheckIn(logic);
+				System.exit(0);
 			} else {
 				errordisplay1.setText("No match for details given. Please try again or see our staffed check in desks.");
 				String error = "Details do not match with a booking: " + refString + "," + surString;
-				ErrorList.addError(error);
+				logic.AddCheckInError(error);
 			}
 		} else {
-			String Errorrep = ErrorReport();
-			ErrorList.addError(Errorrep);
+			logic.AddCheckInError(ErrorReport());
 		}
-	}
-	
-	/**
-	 * Gets booking that matches collected details.
-	 * @param reference Booking code for passenger.
-	 * @param surname Surname used in booking.
-	 * @return Matching booking or null if no matching booking reference found.
-	 */
-	private Booking GetReferencedBooking(String reference, String surname) {
-		Booking searchResult = bookings.get(reference);
-		if(searchResult != null) {
-			if(surname.equals(searchResult.GetSurname())) {
-				return searchResult;
-			}
-		}
-		
-		return null;
 	}
 	
 	/**

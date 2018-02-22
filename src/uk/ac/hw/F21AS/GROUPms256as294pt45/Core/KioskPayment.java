@@ -12,18 +12,18 @@ import javax.swing.*;
  *
  */
 public class KioskPayment extends JFrame  implements ActionListener{
-	
+	private KioskLogic logic;
 	JButton cancel, pay;
 	JLabel title, amountLabel, payLabel,paymentLabel;
 	JCheckBox cashbox, cardbox;
+	
 	/**
 	 * Constructor of the Kiosk GUI payment class.
-	 * @param flightlist from FlightLoader.
-	 * @param ErrosList from ErrorLogger.
+	 * @param logic The kiosk logic which has the booking, flight & error logger.
 	 */
-	
-	public KioskPayment() {
-    	
+	public KioskPayment(KioskLogic logic) {
+    	this.logic = logic;
+		
     	setTitle("KIOSK");
     	setSize(800,500);
     	setResizable(false);
@@ -37,29 +37,30 @@ public class KioskPayment extends JFrame  implements ActionListener{
         //pack();
         setVisible(true);	
     }
+	
 	/**
 	 * It handles the center panel of the GUI
 	 * It displays all the information about the payment.
 	 * You can choose to pay by cash or card.
 	 */
-
 	private void setupCenterPanel() {
-		// TODO Auto-generated method stub
-
-		JPanel mainPanel1 = new JPanel();
+		Panel mainPanel1 = new Panel();
 		mainPanel1.setLayout(new GridLayout(3,1));
+		
 		// Creates the pay label.
 		JPanel payPanel = new JPanel();
 		payPanel.setLayout(new FlowLayout());
-		payLabel= new JLabel("REFERENCE NUMBER");
+		payLabel= new JLabel("Your baggage details have incurred excess baggage fees, please pay: ");
 		payLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		payPanel.add(payLabel);
+		
 		// Creates the amount label.
 		JPanel amountPanel = new JPanel();
 		amountPanel.setLayout(new FlowLayout());
-		amountLabel= new JLabel("REFERENCE NUMBER");
+		amountLabel= new JLabel("£" + String.format("%.2f", logic.PaymentAmount()));
 		amountLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		amountPanel.add(amountLabel);
+		
 		// Creates the panel which you choose how you want to pay.
 		JPanel paymentPanel = new JPanel();
 		paymentPanel.setLayout(new GridLayout(2,1));
@@ -92,7 +93,6 @@ public class KioskPayment extends JFrame  implements ActionListener{
 	 * @return A label as the title of the GUI
 	 */
 	private void setupNorthPanel() {
-		// TODO Auto-generated method stub
 		JPanel titlePanel = new JPanel();
 		title = new JLabel("MAKE YOUR PAYMENT");
 		title.setFont( new Font(Font.MONOSPACED, Font.BOLD,30));
@@ -107,7 +107,6 @@ public class KioskPayment extends JFrame  implements ActionListener{
 	 * @return A Cancel button to dispose the GUI.
 	 */
 	private void setupSouthPanel() {
-		// TODO Auto-generated method stub
 		JPanel southPanel = new JPanel();
 		 pay = new JButton("Pay");
 		 pay.addActionListener(this);
@@ -128,16 +127,15 @@ public class KioskPayment extends JFrame  implements ActionListener{
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getSource() == pay) {
 			if (cashbox.isSelected() || cardbox.isSelected()) {
 				JOptionPane.showMessageDialog(this, 
-   				 " The payment has complited,thank you. Have a nice flight");
+						" The payment has complited,thank you. Have a nice flight");
 				this.setVisible(false);
-				KioskSearch abc=new KioskSearch();
+				logic.PaymentRecieved();
+				KioskSearch abc=new KioskSearch(logic);
 			}else {
-				JOptionPane.showMessageDialog(this, 
-		   				 "Please pick the way you want to pay");
+				JOptionPane.showMessageDialog(this, "Please pick the way you want to pay");
 			}
 			
     	}
@@ -146,9 +144,9 @@ public class KioskPayment extends JFrame  implements ActionListener{
     		int Buttonresult=JOptionPane.showConfirmDialog(this, 
     				 " Do you want to cancel the payment?", "Choose",yes_noButton);
     		if(Buttonresult==0) {
-    			JOptionPane.showMessageDialog(this, 
-       				 "Cheking in has faild");
-    			KioskSearch abc=new KioskSearch();
+    			JOptionPane.showMessageDialog(this, "Cheking in has faild");
+    			logic.PaymentCancelled();
+    			KioskSearch abc=new KioskSearch(logic);
     			this.dispose();
     		}
     		

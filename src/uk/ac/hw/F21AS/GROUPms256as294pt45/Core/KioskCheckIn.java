@@ -21,16 +21,18 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 	double limitWeight=32.00;
 	int maxDimension=200;
 	int limitDimension=110;
-	Booking booking;
-	String destination;
+	private Booking booking;
+	private Flight flight;
+	private KioskLogic logic;
 	
 	/**
 	 * Constructor of the Kiosk GUI Check in class.
-	 * @param flightlist from FlightLoader.
+	 * @param logic The kiosk logic which has the booking, flight & error logger.
 	 */
-	public KioskCheckIn(Booking booking, String destination) {
-		this.booking = booking;
-		this.destination = destination;
+	public KioskCheckIn(KioskLogic logic) {
+		this.logic = logic;
+		booking = logic.CurrentCheckInBooking();
+		flight = logic.CurrentFlightDetails();
 		
     	setTitle("KIOSK");
     	setSize(800,800);
@@ -148,7 +150,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		destinationLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		JPanel destPanel = new JPanel();
 		destPanel.setLayout(new FlowLayout(FlowLayout.LEADING,60,10));
-		destinationDisplay= new JLabel(destination);
+		destinationDisplay= new JLabel(flight.Destination());
 		destPanel.add(destinationDisplay);
 		destinationPanel.add(destinationLabel);
 		destinationPanel.add(destPanel);
@@ -267,7 +269,7 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
     		checkGUI();
     	}
 		else if (e.getSource() == cancel) {
-			KioskSearch abc = new KioskSearch();
+			KioskSearch abc = new KioskSearch(logic);
     		this.dispose();
     	}
 	}
@@ -285,14 +287,26 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		boolean len=CheckLength(lengthstr);
 		boolean wid=CheckWidth(widthstr);
 		boolean hei=CheckHeight(heighttstr);
-		boolean weipay=Weightpayment(weightstr);
-		boolean lenpay=Lengthpayment(lengthstr);
-		boolean widpay=Widthpayment(widthstr);
-		boolean heipay=Heightpayment(heighttstr);
+		
 		if (wei && len && wid && hei) {
-			if(!weipay || !lenpay || !widpay || !heipay) {
-				KioskPayment abc = new KioskPayment();
+			double weight = Double.parseDouble(weightstr);
+			double length = Double.parseDouble(lengthstr);
+			double width = Double.parseDouble(widthstr);
+			double height = Double.parseDouble(heighttstr);
+			
+			BaggageDetails bag = new  BaggageDetails(weight, length, width, height);
+			
+			if(bag.Fee() > 0.0) {
+				logic.AwaitingPayment(bag);
+				KioskPayment abc = new KioskPayment(logic);
 			} else {
+				booking.SetBaggageInfo(bag);
+				booking.CheckIn();
+				
+				flight.AddToWeight(bag.Weight());
+				flight.AddToVolume(bag.Volume());
+				
+				
 				JOptionPane.showMessageDialog(null," Tkank you for checking in. Have a nice Flight " , 
 						" Information ",JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -397,57 +411,5 @@ public class KioskCheckIn extends JFrame  implements ActionListener {
 		}
 		
 		return true;
-	}
-	
-	/**
-	 * Checking the  weight input. if it exceeds our limits.
-	 * @param weightstr
-	 * @return True or False
-	 */
-	private boolean Weightpayment(String weightstr) {
-		double val=Double.parseDouble(weightstr);
-		if(val<limitWeight) {
-			return true;
-		}
-		return false;	
-	}
-	
-	/**
-	 * Checking the  length input. if it exceeds our limits.
-	 * @param lengthstr
-	 * @return True or False
-	 */
-	private boolean Lengthpayment(String lengthstr) {
-		int val=Integer.parseInt(lengthstr);
-		if(val<limitDimension) {
-			return true;
-		}
-		return false;	
-	}
-	
-	/**
-	 * Checking the  width input. if it  exceeds our limits
-	 * @param widhtstr
-	 * @return True or False
-	 */
-	private boolean Widthpayment(String widhtstr) {
-		int val=Integer.parseInt(widhtstr);
-		if(val<limitDimension) {
-			return true;
-		}
-		return false;	
-	}
-	
-	/**
-	 * Checking the  height input. if it  exceeds our limits
-	 * @param heighttstr
-	 * @return True or False
-	 */
-	private boolean Heightpayment(String heighttstr) {
-		int val=Integer.parseInt(heighttstr);
-		if(val<limitDimension) {
-			return true;
-		}
-		return false;	
 	}
 }
