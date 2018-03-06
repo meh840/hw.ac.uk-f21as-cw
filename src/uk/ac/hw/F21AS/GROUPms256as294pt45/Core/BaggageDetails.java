@@ -1,5 +1,5 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
-/*
+/**
  * Contains the baggage information: Weight, Length, Width and Height
  * Weight in kg
  * Dimensions in cm

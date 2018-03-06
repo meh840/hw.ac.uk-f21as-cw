@@ -38,7 +38,7 @@ public class KioskLogic {
 			bookings = bookingLoader.LoadBookings();
 			invalidFormatErrors = bookingLoader.GetErrors();
 		} catch (NullPointerException e) {
-			errorLogger.addUnexpectedError("Booking file triggered an NullPointerException");
+			errorLogger.addUnexpectedError("Booking file triggered a NullPointerException");
 		} catch (IOException e) {
 			errorLogger.addUnexpectedError("Booking file triggered an IOException");
 		}
@@ -46,7 +46,7 @@ public class KioskLogic {
 		try {
 			flights = flightLoader.LoadFlight();
 		} catch (NullPointerException e) {
-			errorLogger.addUnexpectedError("Flight file triggered an NullPointerException");
+			errorLogger.addUnexpectedError("Flight file triggered a NullPointerException");
 		} catch (IOException e) {
 			errorLogger.addUnexpectedError("Flight file triggered an IOException");
 		}

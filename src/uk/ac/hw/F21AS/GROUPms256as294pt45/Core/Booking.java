@@ -1,5 +1,6 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
-/*
+
+/**
  * This class holds the booking information of passenger as well as methods 
  * to process the information.
  * @author Mehdi Seddiq (ms256)  
