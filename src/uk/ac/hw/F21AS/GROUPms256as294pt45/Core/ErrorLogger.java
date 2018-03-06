@@ -1,8 +1,12 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -50,11 +54,16 @@ public class ErrorLogger {
 	// write the Arraylist in a file
 		public  void WriteToFile(String FileName) {
 			
-			 FileWriter DataFile;
+			 //FileWriter DataFile;
 			 try {
-			    DataFile = new FileWriter(FileName);
-			    DataFile.write(this.setTabletoFile());
-			 	DataFile.close();
+			    //DataFile = new FileWriter(FileName);
+			    //DataFile.write(this.setTabletoFile());
+			 	//DataFile.close();
+			 	
+			 	PrintWriter writer = new PrintWriter(
+			                     new File(this.getClass().getResource(FileName).getPath()));
+			 	writer.println(setTabletoFile());
+			 	writer.close();
 			 }
 			 //message and stop if file not found
 			 catch (FileNotFoundException fnf){
@@ -71,7 +80,8 @@ public class ErrorLogger {
 		// create a table to save into a file
 		public String setTabletoFile()
 		{
-			String instance = " Incorrect Entries ("+ this.getSizeofEntry()+ ") \r\r\n";
+			String instance = "Logged: " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date(0)) 
+					+ " \r\r\n" + "Incorrect Entries ("+ this.getSizeofEntry()+ ") \r\r\n";
 			for (String c  : Incorrect_Entries){
 				instance += String.format("%-2s", c);
 				instance += "\r\n";
@@ -93,5 +103,4 @@ public class ErrorLogger {
 			}
 			return instance;
 		}
-
 }
