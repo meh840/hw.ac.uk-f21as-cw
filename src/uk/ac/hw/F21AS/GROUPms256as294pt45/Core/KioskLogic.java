@@ -33,6 +33,9 @@ public class KioskLogic {
 		errorLogger = new ErrorLogger();
 	}
 	
+	/**
+	 * Loads Booking and Flight Data
+	 */
 	public void ReadyKiosk() {
 		try {
 			bookings = bookingLoader.LoadBookings();
@@ -51,7 +54,7 @@ public class KioskLogic {
 			errorLogger.addUnexpectedError("Flight file triggered an IOException");
 		}
 	}
-	
+
 	public void StartUpKiosk() {
 		if(!invalidFormatErrors.isEmpty()) {
 			for(String error : invalidFormatErrors) {
