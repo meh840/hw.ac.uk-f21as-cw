@@ -22,7 +22,8 @@ public class AirportCheckin {
 		DataModel model = new DataModel(passengerQueue, kiosk1, kiosk2);
 		AutomatedFrame view = new AutomatedFrame(model);
 		CheckinController controller = new CheckinController(model, view);
-		
+		controller.LoadFiles();
+		controller.StartCheckin();
 	}
 
 }
