@@ -30,30 +30,34 @@ public class Passenger {
 		
 		attemptCount = 1;
 		
+		// Default set up of attempt booleans.
+		makeSecondAttempt = false;
+		makeThirdAttempt = false; 
+		alterReference = false;
+		alterSurname = false;
+		
 		// Have the passenger make multiple attempts at checking in.
 		if(Math.random() > 0.8) {
 			makeSecondAttempt = true;
+			
 			// 50/50 chance to make a third attempt.
 			if(Math.random() > 0.5) {
 				makeThirdAttempt = true;
 			} 
+			
 			// 50/50 chance to alter booking reference.
 			if(Math.random() > 0.5) {
 				alterReference = true;
+				
 				// 50/50 chance to alter surname too.
 				if(Math.random() > 0.5) {
 					alterSurname = true;
-				} 
+				} 				
 			} else {
 				// Make sure an alteration is made.
 				alterSurname = true;
 			}
-		} else {
-			makeSecondAttempt = false;
-			makeThirdAttempt = false; 
-			alterReference = false;
-			alterSurname = false;
-		}
+		} 
 	}
 	
 	/**
