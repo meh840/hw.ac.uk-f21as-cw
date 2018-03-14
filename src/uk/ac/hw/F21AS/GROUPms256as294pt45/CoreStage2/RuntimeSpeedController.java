@@ -7,17 +7,23 @@ package src.uk.ac.hw.F21AS.GROUPms256as294pt45.CoreStage2;
  * @author Alan Spence (as294)
  *
  */
-public class RuntimeSpeedController {
-	private int speedSetting;
-	private double maxTimeToEnterDetails;
+public final class RuntimeSpeedController {
+	private int speedSetting = 1;
+	private double maxTimeToEnterDetails = 10;
+	private static RuntimeSpeedController instance = null;
+	
+	private RuntimeSpeedController() {}
 	
 	/**
-	 * Constructor for RuntimeSpeedController.
-	 * Sets simulation speed to 1 (normal) and max time to enter details as 10 seconds.
+	 * Get an instance of RuntimeSpeedController (singleton).
+	 * @return An instance of the RuntimeSpeedController.
 	 */
-	public RuntimeSpeedController() {
-		speedSetting = 1;
-		maxTimeToEnterDetails = 10; // Can take up to 10 seconds to enter details.
+	public static RuntimeSpeedController getInstance() {
+		if(instance == null) {
+			instance = new RuntimeSpeedController();
+		}
+		
+		return instance;
 	}
 	
 	/**

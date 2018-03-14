@@ -11,12 +11,12 @@ public class Attempt {
 	
 	/**
 	 * Constructor for Attempt
-	 * @param reference The booking reference to search system for booking with.
+	 * @param bookingReference The booking reference to search system for booking with.
 	 * @param surname The surname to search system for booking with.
 	 * @param useMannedKiosk After 3 attempts the passenger will want to go to a manned kiosk.
 	 */
-	public Attempt(String reference, String surname, Boolean useMannedKiosk) {
-		this.reference = reference;
+	public Attempt(String bookingReference, String surname, Boolean useMannedKiosk) {
+		reference = bookingReference;
 		this.surname = surname;
 		this.useMannedKiosk = useMannedKiosk;
 	}
@@ -25,7 +25,7 @@ public class Attempt {
 	 * Booking reference to enter.
 	 * @return Booking reference for check in.
 	 */
-	public String Reference() {
+	public String BookingReference() {
 		return reference;
 	}
 	

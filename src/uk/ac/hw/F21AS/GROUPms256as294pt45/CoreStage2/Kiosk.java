@@ -34,7 +34,7 @@ public class Kiosk extends Thread{
 	public void run(){
 		String bookingRef, surname;
 		while (CheckinRunning){
-			bookingRef=passengerQueue.get(0).CheckInDetails().Reference();
+			bookingRef=passengerQueue.get(0).CheckInDetails().BookingReference();
 			surname=passengerQueue.get(0).CheckInDetails().Surname();
 			
 		}

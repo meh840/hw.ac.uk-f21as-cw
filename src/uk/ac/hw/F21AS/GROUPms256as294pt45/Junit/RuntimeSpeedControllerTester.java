@@ -13,7 +13,8 @@ public class RuntimeSpeedControllerTester {
 	
 	@Before
 	public void setup() {
-		rsc = new RuntimeSpeedController();
+		rsc = RuntimeSpeedController.getInstance();
+		rsc.SetRuntimeSpeed(1); // Ensure 
 	}
 
 	@Test
