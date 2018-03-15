@@ -5,6 +5,7 @@ package src.uk.ac.hw.F21AS.GROUPms256as294pt45.CoreStage2;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Observer;
 import java.util.TreeMap;
 
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Booking;
@@ -18,7 +19,7 @@ import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.FlightLoader;
  * @author mehdi seddiq (ms256)
  *
  */
-public class CheckinController {
+public class CheckinController{
 	private String bookingPath, flightPath;
 	private BookingLoader bookingLoader;
 	private FlightLoader flightLoader;
@@ -31,12 +32,6 @@ public class CheckinController {
 	
 	//public DataModel model;
 	//public AutomatedFrame view;
-	//public static TreeMap<String, Flight> flights;
-	//private String flightPath;
-	//private FlightLoader flightLoader;
-	//public static TreeMap<String, Booking> bookings;
-	//private String bookingPath;
-	//private BookingLoader bookingLoader;
 	//public static ArrayList<Passenger> passengerQueue;
 	
 	
@@ -62,36 +57,10 @@ public class CheckinController {
 		
 		simulationSpeed = RuntimeSpeedController.getInstance();
 		
-		ReadyDataCollections();
+		CollectDataFromFiles();
 		
 		passengerGenerator = new PassengerGenerator(bookings, invalidFormatErrors);
 	}
-	/**
-	 * loads Booking and Flight Data, also saves errors in a file
-	 */
-	public void LoadFiles() {
-		try {
-			bookings = bookingLoader.LoadBookings();
-			invalidFormatErrors = bookingLoader.GetErrors();
-		}
-		catch (NullPointerException e) {
-			errorLogger.addUnexpectedError("Booking file triggered a NullPointerException");
-		}
-		catch (IOException e) {
-			errorLogger.addUnexpectedError("Booking file triggered an IOException");
-		}
-		
-		try {
-			flights = flightLoader.LoadFlight();
-		} 
-		catch (NullPointerException e) {
-			errorLogger.addUnexpectedError("Flight file triggered a NullPointerException");
-		} 
-		catch (IOException e) {
-			errorLogger.addUnexpectedError("Flight file triggered an IOException");
-		}
-	}
-
 	
 	public void StartCheckin(){
 		
@@ -104,7 +73,7 @@ public class CheckinController {
 	/**
 	 * Loads Booking and Flight Data
 	 */
-	private void ReadyDataCollections() {
+	private void CollectDataFromFiles() {
 		try {
 			bookings = bookingLoader.LoadBookings();
 			invalidFormatErrors = bookingLoader.GetErrors();

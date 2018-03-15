@@ -79,6 +79,13 @@ public class PassengerGenerator extends Observable implements Runnable  {
 	}
 	
 	/**
+	 * 
+	 */
+	public void PassengersAreNowInQueue() {
+		goingToQueue = new ArrayList<Passenger>();
+	}
+	
+	/**
 	 * Gets a single passenger from the list of passengers.
 	 * @return Randomly picked passenger.
 	 */
@@ -97,18 +104,33 @@ public class PassengerGenerator extends Observable implements Runnable  {
 		int howManyWantToJoin = 0;
 		
 		while(passengers.size() != 0) {
+			// Check if passengers have yet to be added to the queue.
+			while(goingToQueue.size() != 0) {
+				// Wait half a second to see if passengers have gone to the queue.
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// Restore the interrupted status
+				    Thread.currentThread().interrupt(); 
+				    // TODO: Not sure if this is how I want this handled.
+				}
+			}
+			
 			// Work out wait time then wait.
 			waitTime = simulationSpeed.MatchSimulationSpeed((double)waitTime);
 			
 			try {
 				Thread.sleep(waitTime);
 			} catch (InterruptedException e) {
-				// TODO What to do with exception.
+				// Restore the interrupted status
+			    Thread.currentThread().interrupt();
+			    // TODO: Not sure if this is how I want this handled.
 			}
 			
 			// Work out randomly how many should join queue, at least 1 to maxJoinAmount. 
 			howManyWantToJoin = (int) (Math.random() * (maxJoinAmount - 1)) + 1;
 			
+			// Get them ready for queue, ensuring I don't try to add passengers not there.
 			while(howManyWantToJoin > 0 && passengers.size() != 0) {
 				goingToQueue.add(RandomlySelectAPassenger());
 			}
