@@ -94,28 +94,28 @@ public class Passenger {
 	
 	/**
 	 * Checks in booking reference is to be altered for attempt and alters if required.
-	 * @param ref Reference to check.
+	 * @param bookingReference Reference to check.
 	 * @return Reference entered for check (alter/not altered).
 	 */
-	private String AlterReferenceCheck(String ref) {
+	private String AlterReferenceCheck(String bookingReference) {
 		if(alterReference) {
-			ref.substring(0, (ref.length() - 1));
+			bookingReference.substring(0, (bookingReference.length() - 1));
 		}
 		
-		return ref;
+		return bookingReference;
 	}
 	
 	/**
 	 * Checks in surname is to be altered for attempt and alters if required.
-	 * @param name Name to check.
+	 * @param surname Name to check.
 	 * @return Name entered for check (alter/not altered).
 	 */
-	private String AlterSurnameCheck(String name) {
+	private String AlterSurnameCheck(String surname) {
 		if(alterSurname) {
-			name.substring(0,(name.length() - 1));
+			surname.substring(0,(surname.length() - 1));
 		}
 		
-		return name;
+		return surname;
 	}
 	
 	/**

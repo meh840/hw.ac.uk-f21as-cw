@@ -17,7 +17,7 @@ public class AttemptTester {
 	
 	@Test
 	public void testCanGetTheBookingReferenceFromAttempt() {
-		assertEquals("Booking reference should be 'Ref'", "Ref", attempt.Reference());
+		assertEquals("Booking reference should be 'Ref'", "Ref", attempt.BookingReference());
 	}
 	
 	@Test

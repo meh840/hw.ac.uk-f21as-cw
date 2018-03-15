@@ -82,7 +82,7 @@ public class Kiosk extends Thread{
 				currentFlight=flights.get(flightCode);
 				fee=baggageInfo.Fee();
 				if (fee!=0){
-					//eventExpression='Passenger with booking reference'+currentPassenger.BookingRef+'charged £' + fee + ' for their Baggage';					
+					//eventExpression='Passenger with booking reference'+currentPassenger.BookingRef+'charged ï¿½' + fee + ' for their Baggage';					
 					currentFlight.AddToFees(fee);
 					try {
 						sleep(PAUSE_FEE);
