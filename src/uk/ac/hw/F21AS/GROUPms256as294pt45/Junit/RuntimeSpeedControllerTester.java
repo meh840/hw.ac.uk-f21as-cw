@@ -19,18 +19,23 @@ public class RuntimeSpeedControllerTester {
 
 	@Test
 	public void testCheckRuntimeSpeedControllerStartWithSpeedSetToNormal() {
+		assertEquals("Current speed setting value should be 1", 1, rsc.CurrentSpeedSetting());
 		assertEquals("Waiting time given should be same as entered in milliseconds", 1000, rsc.MatchSimulationSpeed(1));
 	}
 
 	@Test
 	public void testCheckRuntimeSpeedControllerChangeSpeedSetToDouble() {
+		assertEquals("Current speed setting value should be 1", 1, rsc.CurrentSpeedSetting());
 		rsc.SetRuntimeSpeed(2);
+		assertEquals("Current speed setting value should be 2", 2, rsc.CurrentSpeedSetting());
 		assertEquals("Waiting time given should be half of entered in milliseconds", 500, rsc.MatchSimulationSpeed(1));
 	}
 
 	@Test
 	public void testCheckRuntimeSpeedControllerChangeSpeedSetToFourTimesFaster() {
+		assertEquals("Current speed setting value should be 1", 1, rsc.CurrentSpeedSetting());
 		rsc.SetRuntimeSpeed(4);
+		assertEquals("Current speed setting value should be 4", 4, rsc.CurrentSpeedSetting());
 		assertEquals("Waiting time given should be quarter of entered in milliseconds", 250, rsc.MatchSimulationSpeed(1));
 	}
 	

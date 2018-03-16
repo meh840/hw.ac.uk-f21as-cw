@@ -40,6 +40,14 @@ public final class RuntimeSpeedController {
 	}
 	
 	/**
+	 * Give the current speed of the simulation.
+	 * @return 1 (normal), 2 (twice as fast) or 4 (four times faster). 
+	 */
+	public int CurrentSpeedSetting() {
+		return speedSetting;
+	}
+	
+	/**
 	 * Get a random wait time between 0 and maxTime.
 	 * @param maxTime Maximum value the wait time can be in seconds.
 	 * @return A wait time in milliseconds.
