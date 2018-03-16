@@ -4,41 +4,41 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.CoreStage2;
 
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.TreeMap;
 
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Booking;
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
-import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.KioskLogic;
-import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.KioskSearch;
 
-/**Simulates the Desks
+/**Simulates the Kiosks
  * @author mehdi seddiq (ms256)
  *
  */
-public class Kiosk extends Thread{
+public class Kiosk extends Observable implements Runnable {
 	private static final int PAUSE_MANUAL_KIOSK = 50;
 	private static final int PAUSE_FEE=100;	
 	private static final int PAUSE_BOARDING=10;
-	private static TreeMap<String, Booking> bookings;
-	private static TreeMap<String, Flight> flights;
-	public static ArrayList<Passenger> passengerQueue;
-	public boolean CheckinRunning=true;
-	private KioskSearch kioskSearch;
-	public String eventExpression; //the message showing recent event happened in kiosk 
+	private TreeMap<String, Booking> bookings;
+	private TreeMap<String, Flight> flights;
+	private ArrayList<Passenger> passengerQueue;
+	public boolean checkinRunning;
+	//private KioskSearch kioskSearch;
+	private String kioskEvent; //the message showing recent event happened in kiosk 
 	//private static final int MAX_AUTO_ATTEMPTS=3; // maximum times that Auto Desks check passenger's name/bookingRef 
 	/**
 	 * Constructor for Kiosk
 	 * @param
 	 */
-	public Kiosk(TreeMap<String, Booking> givenBookings, ArrayList<Passenger> givenPassengerQueue){
-		bookings=givenBookings;
-		passengerQueue=givenPassengerQueue;
+	public Kiosk(){
+		checkinRunning=true;
+		kioskEvent=null;
 	}
 	
-	/**
-	 * 
+	/** (non-Javadoc)
+	 * @see java.lang.Runnable#run()
 	 */
+	@Override
 	public void run(){
 		Booking currentBooking;
 		Flight currentFlight;
@@ -48,12 +48,12 @@ public class Kiosk extends Thread{
 		BaggageDetails baggageInfo;
 		double fee;
 		boolean entryValid; 
-		while (CheckinRunning){
+		while (checkinRunning){
 			currentPassenger=passengerQueue.get(0);
 			passengerQueue.remove(0);// current passenger is no longer in the Queue
 			do{ 
 				attempt= currentPassenger.CheckInDetails();
-				bookingRef=attempt.Reference();
+				bookingRef=attempt.BookingReference();
 				if (VerifyBookingRef(bookingRef)){
 					entryValid=true;
 					surname=attempt.Surname();
@@ -66,10 +66,12 @@ public class Kiosk extends Thread{
 				}
 			}while (!attempt.UseMannedKiosk() && !entryValid);
 			if (attempt.UseMannedKiosk()){
+				//setChanged();
+				notifyObservers();
 				//eventExpression='Passenger with booking reference '+currentPassenger.BookingRef+' directed to manual kiosk';
 				//notify view
 				try {
-					sleep(PAUSE_MANUAL_KIOSK);
+					Thread.sleep(PAUSE_MANUAL_KIOSK);
 				} catch (InterruptedException e) {
 					//System.out.println(e.getMessage());
 					e.printStackTrace();
@@ -85,7 +87,7 @@ public class Kiosk extends Thread{
 					//eventExpression='Passenger with booking reference'+currentPassenger.BookingRef+'charged �' + fee + ' for their Baggage';					
 					currentFlight.AddToFees(fee);
 					try {
-						sleep(PAUSE_FEE);
+						Thread.sleep(PAUSE_FEE);
 					} catch (InterruptedException e) {
 						//System.out.println(e.getMessage());
 						e.printStackTrace();
@@ -97,15 +99,15 @@ public class Kiosk extends Thread{
 				currentFlight.AddToVolume(baggageInfo.Volume());
 				//notify view
 				try {
-					sleep(PAUSE_BOARDING);
+					Thread.sleep(PAUSE_BOARDING);
 				} catch (InterruptedException e) {
 					//System.out.println(e.getMessage());
 					e.printStackTrace();
 				}
 			}
-						
+				
 		}
-	}
+	}// run
 	
 	private Boolean VerifyBookingRef (String refString) {
 		final int referenceSize=7;
@@ -127,6 +129,31 @@ public class Kiosk extends Thread{
 	        }
 		}        
 		return true;
+	}
+
+	public void SetBookings(TreeMap<String, Booking> givenBookings){
+		bookings=givenBookings;
+	}
+	
+	public void SetFlights(TreeMap<String, Flight> givenFlights){
+		flights=givenFlights;
+	}
+	
+	public TreeMap<String, Booking> getBookings(){
+		return bookings;
+	}
+	
+	public TreeMap<String, Flight> getFlights(){
+		return flights;
+	}	
+
+	// check return type
+	public ArrayList<Passenger> getPassengerQueueList(){
+		return passengerQueue; 
+	}
+	
+	public String getKioskEvent(){
+		return kioskEvent;
 	}
 	
 }
