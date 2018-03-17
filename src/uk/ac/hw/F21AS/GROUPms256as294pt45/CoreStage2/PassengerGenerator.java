@@ -79,7 +79,8 @@ public class PassengerGenerator extends Observable implements Runnable  {
 	}
 	
 	/**
-	 * 
+	 * Once passengers have been added to the queue, 
+	 * this clears them from the list of those waiting to join queue. 
 	 */
 	public void PassengersAreNowInQueue() {
 		goingToQueue = new ArrayList<Passenger>();
@@ -117,7 +118,7 @@ public class PassengerGenerator extends Observable implements Runnable  {
 			}
 			
 			// Work out wait time then wait.
-			waitTime = simulationSpeed.MatchSimulationSpeed((double)waitTime);
+			waitTime = simulationSpeed.RandomWaitTime((double)maxWaitTime);
 			
 			try {
 				Thread.sleep(waitTime);

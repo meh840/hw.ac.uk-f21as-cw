@@ -125,4 +125,11 @@ public class Passenger {
 	public BaggageDetails EnterBaggageDetails() {
 		return passengersDetails.GetBaggageInfo();
 	}
+	
+	/**
+	 * Gives the Passenger's details (comma separated, file format)
+	 */
+	public String toString() {
+		return passengersDetails.SummaryString();
+	}
  }
