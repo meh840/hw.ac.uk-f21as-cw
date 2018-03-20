@@ -127,7 +127,7 @@ public class Passenger {
 	}
 	
 	/**
-	 * Gives the Passenger's details (comma separated, file format)
+	 * Gives the Passenger's details (comma separated, file format).
 	 */
 	public String toString() {
 		return passengersDetails.SummaryString();
