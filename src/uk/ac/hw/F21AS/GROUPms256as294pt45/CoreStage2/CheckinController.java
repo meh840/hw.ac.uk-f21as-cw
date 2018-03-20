@@ -73,6 +73,8 @@ public class CheckinController implements Observer{
 	public void StartCheckin(){
 		passengerGenerator.run(); 
 		//passengerQueue.list=passengerGenerator.PassengersToJoinTheQueue();
+		kiosk1.addObserver(this);
+		kiosk2.addObserver(this);
 		kiosk1.run();
 		//kioskEvent=kiosk1.getKioskEvent();		
 		//NumPassengersInQueue=passengerQueue.NumPassengersInQueque;
@@ -107,6 +109,7 @@ public class CheckinController implements Observer{
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
+	//@Override 
 	public void update(Kiosk kiosk) {
 		// TODO Auto-generated method stub
 		bookings=kiosk.getBookings();

@@ -20,6 +20,8 @@ public class AirportCheckin {
 		//kiosk1=null; kiosk2=null;//temporarily
 		//AutomatedFrame view = new AutomatedFrame(model);
 		CheckinController controller = new CheckinController();
+		//controller
+
 		
 	}
 
