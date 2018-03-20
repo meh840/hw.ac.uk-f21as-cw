@@ -13,7 +13,7 @@ public class Plane {
 	private Flight flightDetails;
 	private String flightCode;
 	private int capacity;
-	private SimpleDateFormat departureTime;
+	private String departureTime;
 	private ArrayList<String> boarded;
 	
 	public Plane(String flightCode, int planeCapacity) {
@@ -44,6 +44,12 @@ public class Plane {
 	 */
 	public int TotalOfPassengersBoarded() {
 		return boarded.size();
+	}
+	
+	public boolean StillAvailableForBoarding() {
+		// TODO: Check simulation clock with departure time.
+		
+		return true;
 	}
 	
 	/**
