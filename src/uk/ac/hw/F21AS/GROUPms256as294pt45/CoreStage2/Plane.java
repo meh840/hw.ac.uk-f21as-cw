@@ -14,12 +14,17 @@ public class Plane {
 	private String flightCode;
 	private int capacity;
 	private String departureTime;
+	private SimulationClock clock;
 	private ArrayList<String> boarded;
 	
-	public Plane(String flightCode, int planeCapacity) {
+	public Plane(String flightCode, Flight flightDetails, int planeCapacity) {
 		this.flightCode = flightCode;
+		this.flightDetails = flightDetails;
 		capacity = planeCapacity;
-		// TODO: Set up departure time.
+
+		// Get an instance of the simulation clock and use capacity to calculate departure time.
+		clock = SimulationClock.GetInstance();
+		departureTime = clock.AddDepartureTime(capacity);
 	}
 	
 	/**
@@ -42,14 +47,16 @@ public class Plane {
 	 * Gives the total of passengers that have boarded the plane.
 	 * @return Number of passengers currently on the plane.
 	 */
-	public int TotalOfPassengersBoarded() {
+	public int TotalOfPassengersThatHaveBoarded() {
 		return boarded.size();
 	}
 	
+	/**
+	 * Checks if the departure time has been reached or even exceeded.
+	 * @return True: Not yet departed. False: Departure has been.
+	 */
 	public boolean StillAvailableForBoarding() {
-		// TODO: Check simulation clock with departure time.
-		
-		return true;
+		return !clock.DepartureCheck(departureTime);
 	}
 	
 	/**
@@ -58,5 +65,23 @@ public class Plane {
 	 */
 	public void PlaneDeparts(Flight flightDetails) {
 		this.flightDetails = flightDetails;
+	}
+	
+	/**
+	 * Generates the summary of the departed plane.
+	 * @return String containing the flight details and the passengers that boarded.
+	 */
+	public String DepartureDetails() {
+		String departure = "";
+		
+		// Summary string of flight.
+		//TODO: Add to Flight class a summary method for recording information of departure.
+		
+		// Add each passenger.
+		for (String passenger : boarded) {
+			departure += passenger + "\n";
+		}
+		
+		return departure;
 	}
 }
