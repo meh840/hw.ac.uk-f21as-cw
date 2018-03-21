@@ -110,13 +110,29 @@ public class CheckinController implements Observer{
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	//@Override 
-	public void update(Kiosk kiosk) {
+	public void update(ClassesList news) {
 		// TODO Auto-generated method stub
-		bookings=kiosk.getBookings();
+/*		bookings=kiosk.getBookings();
 		flights=kiosk.getFlights();
 		passengerQueue.list=kiosk.getPassengerQueueList();
 		kioskEvent=kiosk.getKioskEvent();
-		NumPassengersInQueue=passengerQueue.list.size(); 
+		NumPassengersInQueue=passengerQueue.list.size();*/
+		ClassesList source;
+		switch (news){
+		case AUTO_KIOSK:
+			break;
+		case MANNED_KIOSK:
+			break;
+		case PASSENGER_GENERATOR:
+			break;
+		case PASSENGERQUEUE:
+			break;
+		case SIMULATION_CLOCK:
+			break;
+		
+		}
+		
+		
 	}
 	
 }
