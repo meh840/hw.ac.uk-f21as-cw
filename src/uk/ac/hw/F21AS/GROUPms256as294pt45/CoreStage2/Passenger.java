@@ -132,4 +132,18 @@ public class Passenger {
 	public String toString() {
 		return passengersDetails.SummaryString();
 	}
+	
+	/**
+	 * Gives the passenger information needed for queue display in GUI.
+	 * @return An Object array of passenger's booking reference, full name & flight code.
+	 */
+	public Object[] QueueDisplayInformation() {
+		Object[] info = new Object[3];
+		
+		info[0] = passengersDetails.GetBookingReference();
+		info[1] = passengersDetails.GetFirstName() + " " + passengersDetails.GetSurname();
+		info[2] = passengersDetails.GetFlightCode();
+		
+		return info;
+	}
  }

@@ -1,30 +1,38 @@
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.CoreStage2;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Observable;
 
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
 
 /**
+ * A class to represent a plane for the simulation. One that can have a departure time for 
+ * the flight, log the passengers that board the plane and can be delayed if less than half 
+ * the passengers are aboard.
  * @author Alan Spence (as294)
  *
  */
-public class Plane {
+public class Plane extends Observable {
 	private Flight flightDetails;
 	private String flightCode;
-	private int capacity;
 	private String departureTime;
 	private SimulationClock clock;
 	private ArrayList<String> boarded;
+	private boolean delayed;
 	
-	public Plane(String flightCode, Flight flightDetails, int planeCapacity) {
+	/**
+	 * Constructor for plane class.
+	 * @param flightCode The unique code for the plane.
+	 * @param flightDetails The flight record for this plane.
+	 */
+	public Plane(String flightCode, Flight flightDetails) {
 		this.flightCode = flightCode;
 		this.flightDetails = flightDetails;
-		capacity = planeCapacity;
+		delayed = false;
 
 		// Get an instance of the simulation clock and use capacity to calculate departure time.
 		clock = SimulationClock.GetInstance();
-		departureTime = clock.AddDepartureTime(capacity);
+		departureTime = clock.AddDepartureTime(flightDetails.PassengerCapacity());
 	}
 	
 	/**
@@ -36,11 +44,22 @@ public class Plane {
 	}
 	
 	/**
+	 * Gives the departure time for the plane.
+	 * @return String representing time as HH:mm.
+	 */
+	public String DepartureTime() {
+		return departureTime;
+	}
+	
+	/**
 	 * A passenger has checked in, have them board flight.
 	 * @param Passenger The passenger boarding (toString).
 	 */
 	public void BoardFlight(String Passenger) {
 		boarded.add(Passenger);
+		
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -60,6 +79,34 @@ public class Plane {
 	}
 	
 	/**
+	 * Indicates if the plane has been delayed or not.
+	 * @return True: Departure delayed. False: Departing on time.
+	 */
+	public boolean HasPlaneBeenDelayed() {
+		return delayed;
+	}
+	
+	/**
+	 * Checks how many have boarded the plane and if there is not enough, delay departure. 
+	 * Note: Only works at (or past) departure time.
+	 * @return True: Plane can depart. False: Not enough passengers on the plane.
+	 */
+	public boolean ReadyToDepart() {
+		if(clock.DepartureCheck(departureTime)) {
+			if(boarded.size() >= (flightDetails.PassengerCapacity() / 2)) {
+				return true;
+			}
+			
+			departureTime = clock.AddDepartureTime((flightDetails.PassengerCapacity() / 2));
+			delayed = true;
+			setChanged();
+			notifyObservers();
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * The plane is departing, give it the final details.
 	 * @param flightDetails Details accumulated from Kiosks. 
 	 */
@@ -75,9 +122,10 @@ public class Plane {
 		String departure = "";
 		
 		// Summary string of flight.
-		//TODO: Add to Flight class a summary method for recording information of departure.
+		departure += flightDetails.FlightSummary();
 		
 		// Add each passenger.
+		departure += "Passnegers which boarded this flight are :\n";
 		for (String passenger : boarded) {
 			departure += passenger + "\n";
 		}

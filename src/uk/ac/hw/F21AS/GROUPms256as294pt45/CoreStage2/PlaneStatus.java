@@ -10,7 +10,7 @@ public class PlaneStatus {
 	private String flightCode, destination, depatureTime;
 	private int boarded, capacity;
 	private double currentVolume, maxVolume, currentWeight, maxWeight;
-	private boolean departing;
+	private boolean departing, delayed;
 	
 	/**
 	 * Create a status update for a plane.
@@ -24,9 +24,11 @@ public class PlaneStatus {
 	 * @param currentWeight Current weight taken up by baggage.
 	 * @param maxWeight Maximum weight all the baggage can weigh.
 	 * @param departing True: Plane is starting journey. False: Plane still taking passengers.
+	 * @param delayed True: Plane's departure delayed. False: Plane departing on time.
 	 */
 	public PlaneStatus(String flightCode, String destination, String depatureTime, int boarded, int capacity, 
-			double currentVolume, double maxVolume, double currentWeight, double maxWeight, boolean departing) {
+			double currentVolume, double maxVolume, double currentWeight, double maxWeight, boolean departing,
+			boolean delayed) {
 		this.flightCode = flightCode;
 		this.destination = destination;
 		this.depatureTime = depatureTime;
@@ -37,6 +39,7 @@ public class PlaneStatus {
 		this.currentWeight = currentWeight;
 		this.maxWeight = maxWeight;
 		this.departing = departing;
+		this.delayed = delayed;
 	}
 	
 	/**
@@ -104,8 +107,16 @@ public class PlaneStatus {
 	}
 	
 	/**
+	 * Indicates if the plane's departure time has been set back to give passengers more time.
+	 * @return True: Plane's departure delayed. False: Plane departing on time.
+	 */
+	public boolean HasPlaneBeenDelayed() {
+		return delayed;
+	}
+	
+	/**
 	 * Gives an entry for the event logger for this update.
-	 * @return A string stating what this update means.
+	 * @return A string stating what this update is.
 	 */
 	public String EventEntry() {
 		if(departing) {
