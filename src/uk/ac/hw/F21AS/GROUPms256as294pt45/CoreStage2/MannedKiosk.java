@@ -10,12 +10,14 @@ import java.util.Observable;
  *
  */
 public class MannedKiosk extends Observable implements Runnable {
+	private int pauseInMannedKiosk;
 
 	/**
 	 * 
 	 */
 	public MannedKiosk() {
 		// TODO Auto-generated constructor stub
+		pauseInMannedKiosk=0;
 	}
 
 	/* (non-Javadoc)
@@ -24,7 +26,11 @@ public class MannedKiosk extends Observable implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		
 
 	}
 
+	public void SetPuseInMannedKiosk(int givenPauseInMannedKiosk){
+		pauseInMannedKiosk=givenPauseInMannedKiosk;
+	}
 }

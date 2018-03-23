@@ -14,14 +14,11 @@ import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Booking;
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.KioskCheckIn;
 
-/**Simulates the Kiosks
+/**Simulates the AutoKiosks
  * @author mehdi seddiq (ms256)
  *
  */
-public class Kiosk extends Observable implements Runnable {
-	private static final int PAUSE_MANUAL_KIOSK = 50;
-	private static final int PAUSE_FEE=100;	
-	private static final int PAUSE_BOARDING=10;
+public class AutoKiosk extends Observable implements Runnable {
 	private TreeMap<String, Booking> bookings;
 	private TreeMap<String, Flight> flights;
 	private ArrayList<Passenger> passengerQueue;
@@ -29,16 +26,25 @@ public class Kiosk extends Observable implements Runnable {
 	private boolean queueEmpty;
 	private String kioskEvent; //the message showing recent event happened in kiosk
 	private String entrySatus; //the text showing the validity of booking reference and surname
+	private Object updatedElement;
+	private int pauseForPayment;
+	private int pauseForEntryCheck;	
+	private int pauseForBoarding;
  
 	/**
-	 * Constructor for Kiosk
+	 * Constructor for AutoKiosk
 	 * @param
 	 */
-	public Kiosk(){
+	public AutoKiosk(){
 		checkinRunning=true;
 		queueEmpty=true;
 		kioskEvent=null;
 		entrySatus=null;
+		updatedElement=null;
+		pauseForPayment = 0;
+		pauseForEntryCheck=0;	
+		pauseForBoarding=0;
+		
 	}
 	
 	/** (non-Javadoc)
@@ -60,7 +66,9 @@ public class Kiosk extends Observable implements Runnable {
 				catch (InterruptedException e) {}
 			}
 			currentPassenger=passengerQueue.get(0);
-			passengerQueue.remove(0);// current passenger is no longer in the Queue
+			updatedElement=passengerQueue;
+			setChanged();
+			notifyObservers();
 			do{ 
 				attempt= currentPassenger.CheckInDetails();
 				bookingRef=attempt.BookingReference();
@@ -223,8 +231,24 @@ public class Kiosk extends Observable implements Runnable {
 		this.queueEmpty=givenQueueEmpty;
 	}
 	
+	public void SetPauseForPayment(int givenPauseForPayment){
+		pauseForPayment=givenPauseForPayment;
+	}
+	
+	public void SetPauseForEntryCheck(int givenPauseForEntryCheck){
+		pauseForEntryCheck=givenPauseForEntryCheck;
+	}
+
+	public void SetPauseForBoarding(int givenPauseForBoarding){
+		pauseForBoarding=givenPauseForBoarding;
+	}	
+	
 	public String getKioskEvent(){
 		return kioskEvent;
+	}
+	
+	public Object getUpdatedElement(){
+		return updatedElement;
 	}
 	
 }

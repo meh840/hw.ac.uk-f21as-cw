@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.TreeMap;
 
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Booking;
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BookingLoader;
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.ErrorLogger;
@@ -30,13 +31,15 @@ public class CheckinController implements Observer{
 	private ErrorLogger errorLogger;
 	private static RuntimeSpeedController simulationSpeed;
 	private PassengerGenerator passengerGenerator;
-	private Kiosk kiosk1, kiosk2;
+	private AutoKiosk kiosk1, kiosk2;
+	private MannedKiosk mannedKiosk;
 	private PassengerQueue passengerQueue;
 	public String kioskEvent;
 	public int NumPassengersInQueue; 
-	//public DataModel model;
-	//public AutomatedFrame view;
-	//public static ArrayList<Passenger> passengerQueue;
+	private int pauseForPayment;
+	private int pauseForEntryCheck;	
+	private int pauseForBoarding;
+	private int pauseInMannedKiosk;
 	
 	
 	public CheckinController(){
@@ -66,7 +69,12 @@ public class CheckinController implements Observer{
 		kiosk2.SetBookings(bookings);
 		kiosk1.SetFlights(flights);
 		kiosk2.SetFlights(flights);
-		
+
+		pauseForPayment = 0;
+		pauseForEntryCheck=0;	
+		pauseForBoarding=0;
+		pauseInMannedKiosk=0;
+	
 		NumPassengersInQueue=0;
 	}
 	
@@ -75,10 +83,10 @@ public class CheckinController implements Observer{
 		//passengerQueue.list=passengerGenerator.PassengersToJoinTheQueue();
 		kiosk1.addObserver(this);
 		kiosk2.addObserver(this);
+		mannedKiosk.addObserver(this);
 		kiosk1.run();
-		//kioskEvent=kiosk1.getKioskEvent();		
-		//NumPassengersInQueue=passengerQueue.NumPassengersInQueque;
 		kiosk2.run();
+		mannedKiosk.run();
 		
 		// Add Display Events GUI
 		
@@ -110,18 +118,25 @@ public class CheckinController implements Observer{
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	//@Override 
-	public void update(ClassesList news) {
+	public void update() {
 		// TODO Auto-generated method stub
-/*		bookings=kiosk.getBookings();
+/*		bookings=kiosk.getBookings(); 
 		flights=kiosk.getFlights();
 		passengerQueue.list=kiosk.getPassengerQueueList();
 		kioskEvent=kiosk.getKioskEvent();
 		NumPassengersInQueue=passengerQueue.list.size();*/
-		ClassesList source;
-		switch (news){
-		case AUTO_KIOSK:
+		
+			
+		ListOfObservables sourceOfEvent=getChangedSubject();
+		switch (sourceOfEvent){
+		case AUTO_KIOSK1:
+			ApplyKioskUpdates(kiosk1);
 			break;
+		case AUTO_KIOSK2:
+			ApplyKioskUpdates(kiosk2);
+			break;			
 		case MANNED_KIOSK:
+			ApplyKioskUpdates(mannedKiosk);
 			break;
 		case PASSENGER_GENERATOR:
 			break;
@@ -132,7 +147,57 @@ public class CheckinController implements Observer{
 		
 		}
 		
-		
 	}
+	
+	private ListOfObservables getChangedSubject(){
+		if (kiosk1.hasChanged()){
+			return ListOfObservables.AUTO_KIOSK1;
+		}else if (kiosk2.hasChanged()){
+			return ListOfObservables.AUTO_KIOSK2;
+		}else if (mannedKiosk.hasChanged()){
+			return ListOfObservables.MANNED_KIOSK;
+		}
+		return null;
+	}
+	
+	private void ApplyKioskUpdates(AutoKiosk updatedKiosk){
+		Object updatedElement=updatedKiosk.getUpdatedElement();
+		kioskEvent=updatedKiosk.getKioskEvent();
+		if (updatedElement instanceof Booking){
+			Booking updatedBooking=(Booking) updatedElement;
+			bookings.replace(updatedBooking.GetBookingReference(), updatedBooking);
+		}
+		if (updatedElement instanceof Flight){
+			Flight updatedFlight=(Flight) updatedElement;
+			flights.replace(updatedFlight.FlightCode(), updatedFlight);
+		}
+		if (updatedElement instanceof PassengerQueue){
+			PassengerQueue updatedPassengerQueue=(PassengerQueue) updatedElement;
+			passengerQueue=updatedPassengerQueue;
+			//.HeadToKiosk();// current passenger is no longer in the Queue		}
+		}
+
+	}
+
+	
+	private void ApplyKioskUpdates(MannedKiosk updatedKiosk){
+
+	}
+	
+	private void SetKiosksPause(){
+		pauseForPayment = simulationSpeed.RandomWaitTime(200);
+		pauseForEntryCheck=simulationSpeed.TimeToEnterDetails();	
+		pauseForBoarding=simulationSpeed.RandomWaitTime(50);
+
+		kiosk1.SetPauseForPayment(pauseForPayment);
+		kiosk1.SetPauseForEntryCheck(pauseForEntryCheck);
+		kiosk1.SetPauseForBoarding(pauseForBoarding);
+		kiosk2.SetPauseForPayment(pauseForPayment);
+		kiosk2.SetPauseForEntryCheck(pauseForEntryCheck);
+		kiosk2.SetPauseForBoarding(pauseForBoarding);
+		mannedKiosk.SetPauseTotal(pauseInMannedKiosk);
+	}
+
+	
 	
 }
