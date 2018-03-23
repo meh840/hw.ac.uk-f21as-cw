@@ -183,4 +183,18 @@ public class Flight implements Comparable<Flight>{
 		//return ("" + flightCode + "," + destinationAirport + "," + carrier + "," + maxPassengerCapacity + "," + maxWeight + "," + totalWeight + "," + maxVolume + "," + totalVolume + "," + totalFeeAccumulated);
 		return registers.toString();
 	}
+	
+	/**
+	 * Generates a statement of the flight information for displaying purposes.
+	 * @return String stating flight summary.
+	 */
+	public String FlightSummary() {
+		String summary = "Flight " + flightCode + " to " + destinationAirport;
+		summary += " from carrier " + carrier + ". The flight's capcity is " + maxPassengerCapacity;
+		summary += ".\n Baggage is taking up " + totalVolume + "cm3. The plane has a maximum volume of " + maxVolume + "cm3.";
+		summary += " Baggage weighs " + totalVolume + "kg. The plane has a maximum volume of " + maxWeight + "kg.";
+		summary += " The flight accumulated £" + totalFeeAccumulated + " in fees.\n";
+		
+		return summary;
+	}
 }
