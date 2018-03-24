@@ -172,12 +172,6 @@ public final class SimulationClock extends Observable implements Runnable {
 	}
 
 	@Override
-	public void notifyObservers(Object arg) {
-		// TODO Auto-generated method stub
-		super.notifyObservers(arg);
-	}
-
-	@Override
 	public void run() {
 		while(keepTicking) {
 			try {

@@ -14,7 +14,8 @@ import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.ErrorLogger;
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.FlightLoader;
 
-/**Controller in the MVC pattern
+/**
+ * Controller in the MVC pattern
  * Gets user orders from GUI, Displays events, Saves log into File...  
  * @author mehdi seddiq (ms256)
  *
@@ -28,13 +29,12 @@ public class CheckinController implements Observer{
 	private ArrayList<String> invalidFormatErrors;
 	private ErrorLogger errorLogger;
 	private PassengerGenerator passengerGenerator;
+	private PassengerQueue passengerQueue;
 	private AutoKiosk kiosk1, kiosk2;
 	private MannedKiosk mannedKiosk;
-	private PassengerQueue passengerQueue;
 	public String kioskEvent;
 	private SimulationClock simulationClock;
-	
-	
+		
 	public CheckinController(){
 		// File locations.
 		bookingPath = "/BookingFile.txt";
@@ -50,19 +50,35 @@ public class CheckinController implements Observer{
 		invalidFormatErrors = new ArrayList<String>();
 		
 		errorLogger = new ErrorLogger();
+		simulationClock = SimulationClock.GetInstance();
 		
+		CollectDataFromFiles();
+		
+		// Set up passenger generation and have an initial amount in the queue.
 		passengerGenerator = new PassengerGenerator(bookings, invalidFormatErrors);
-		
+		passengerQueue = new PassengerQueue();
+		ArrayList<Passenger> passengersForQueue = passengerGenerator.InitialPassengersForQueue();
+		for(Passenger newPassenger : passengersForQueue) {
+			passengerQueue.PassengerJoiningQueue(newPassenger);
+		}
 	}
 	
 	public void StartCheckin(){
-		CollectDataFromFiles();
+		// Start having passengers randomly join queue.
 		passengerGenerator.run(); 
-		kiosk1.addObserver(this);
-		kiosk2.addObserver(this);
+		
+		// Define Kiosks.
 		kiosk1.SetKioskNumber(1);
 		kiosk2.SetKioskNumber(2);
+		
+		// Set up observations.
+		kiosk1.addObserver(this);
+		kiosk2.addObserver(this);
 		mannedKiosk.addObserver(this);
+		passengerGenerator.addObserver(this);
+		passengerQueue.addObserver(this);
+		
+		// Start up desks.
 		kiosk1.run();
 		kiosk2.run();
 		mannedKiosk.run();
@@ -72,7 +88,7 @@ public class CheckinController implements Observer{
 	}
 
 	/**
-	 * Loads Booking and Flight Data
+	 * Loads Booking and Flight Data.
 	 */
 	private void CollectDataFromFiles() {
 		try {
@@ -93,34 +109,30 @@ public class CheckinController implements Observer{
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	//@Override 
-	public void update() {
-		// TODO Auto-generated method stub
+	@Override
+	public void update(Observable observable, Object object) {
 		ListOfObservables sourceOfEvent=GetChangedSubject();
 		switch (sourceOfEvent){
-		case AUTO_KIOSK1:
-			ApplyKioskUpdates(kiosk1);
-			break;
-		case AUTO_KIOSK2:
-			ApplyKioskUpdates(kiosk2);
-			break;			
-//		case MANNED_KIOSK:
-//			ApplyKioskUpdates(mannedKiosk);
-//			break;
-		case PASSENGER_GENERATOR:
-			break;
-		case PASSENGER_QUEUE:
-			break;
-		case SIMULATION_CLOCK:
-			break;
-		default:
-			break;
-		
+			case AUTO_KIOSK1:
+				ApplyKioskUpdates(kiosk1);
+				break;
+			case AUTO_KIOSK2:
+				ApplyKioskUpdates(kiosk2);
+				break;			
+	//		case MANNED_KIOSK:
+	//			ApplyKioskUpdates(mannedKiosk);
+	//			break;
+			case PASSENGER_GENERATOR:
+				GetPassengersForQueue();
+				break;
+			case PASSENGER_QUEUE:
+				QueueUpdate();
+				break;
+			case SIMULATION_CLOCK:
+				break;
+			default:
+				break;
 		}
-		
 	}
 	
 	private ListOfObservables GetChangedSubject(){
@@ -208,88 +220,96 @@ public class CheckinController implements Observer{
 	 * @param refString is a string which is supposed to be a booking reference
 	 * @returns true if the string matches the format, false otherwise
 	 */
-		private Boolean CheckBookingRefFormat (String refString) {
-			final int referenceSize=7;
-			String bookingRef=refString.trim();
-			bookingRef=bookingRef.toUpperCase();
-			if (refString == null || refString.isEmpty() || 
-				refString.toCharArray().length <referenceSize ||
-				refString.toCharArray().length >referenceSize ||
-				!(Character.isLetter(bookingRef.charAt(0)) &&
-				  Character.isLetter(bookingRef.charAt(1)) &&
-				  Character.isDigit(bookingRef.charAt(2)) &&
-				  Character.isDigit(bookingRef.charAt(3)) &&
-				  Character.isLetter(bookingRef.charAt(4)) &&
-				  Character.isLetter(bookingRef.charAt(5)) &&
-				  Character.isDigit(bookingRef.charAt(6)))){
-				return false;
-			}else{
-				return true;
-			}
-		}
-
-		/**
-		 * verifies the given string to be potentially a surname 
-		 * @param refString which is supposed to be a surname
-		 * @return true if the input is deduced as a surname, false otherwise
-		 */
-		private Boolean CheckSurnameFormat(String surString) {
-			String surname=surString.trim();
-			String s1 = surname.substring(0, 1).toUpperCase();
-			surname=s1 + surname.substring(1).toLowerCase();
-			if (surString == null || surString.isEmpty()) {
-				return false;
-			}
-			for(char c : surString.toCharArray()){
-		        if(Character.isDigit(c) || Character.isSpaceChar(c)){
-		        	return false;
-		        }
-			}
+	private Boolean CheckBookingRefFormat (String refString) {
+		final int referenceSize=7;
+		String bookingRef=refString.trim();
+		bookingRef=bookingRef.toUpperCase();
+		if (refString == null || refString.isEmpty() || 
+			refString.toCharArray().length <referenceSize ||
+			refString.toCharArray().length >referenceSize ||
+			!(Character.isLetter(bookingRef.charAt(0)) &&
+			  Character.isLetter(bookingRef.charAt(1)) &&
+			  Character.isDigit(bookingRef.charAt(2)) &&
+			  Character.isDigit(bookingRef.charAt(3)) &&
+			  Character.isLetter(bookingRef.charAt(4)) &&
+			  Character.isLetter(bookingRef.charAt(5)) &&
+			  Character.isDigit(bookingRef.charAt(6)))){
+			return false;
+		}else{
 			return true;
 		}
-
-		/**
-		 * checks if the given strings refer to a valid booking in the records 
-		 * of Booking Reference and whether it is found in the record of booking list. 
-		 * @param refString is checked to match the predefined format of Booking Reference 
-		 * and also to exist into the recorded bookings
-		 * @param surString is checked to be a typical surname
-		 * also it is checked if it matches the booking reference
-		 * @return a String showing the validity of the inputs
-		 *  if the given string matches one of the booking records
-		 * or otherwise what the type of mismatch is there  
-		 */
-		private boolean VerifyBooking (String refString, String surString) {
-			if (!CheckBookingRefFormat(refString)){
-				kioskEvent= "The given string does not match the format of booking reference";
-				return false;
-			}
-			if (!CheckSurnameFormat(surString)){
-				kioskEvent= "The given string could not be a surname";
-				return false;			
-			}
-			if (bookings.get(refString)==null){
-				kioskEvent= "The given code is not found in the booking records";
-				return false;			
-			}
-			if (!surString.equals(bookings.get(refString).GetSurname())){
-				kioskEvent= "The given surname does not correspond to the recorded booking refernce";
-				return false;			
-			}
-			kioskEvent= "The booking was found in the records successfully";
-			return true;
-		}
-			
-	
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/**
+	 * verifies the given string to be potentially a surname 
+	 * @param refString which is supposed to be a surname
+	 * @return true if the input is deduced as a surname, false otherwise
+	 */
+	private Boolean CheckSurnameFormat(String surString) {
+		String surname=surString.trim();
+		String s1 = surname.substring(0, 1).toUpperCase();
+		surname=s1 + surname.substring(1).toLowerCase();
+		if (surString == null || surString.isEmpty()) {
+			return false;
+		}
+		for(char c : surString.toCharArray()){
+	        if(Character.isDigit(c) || Character.isSpaceChar(c)){
+	        	return false;
+	        }
+		}
+		return true;
+	}
+
+	/**
+	 * checks if the given strings refer to a valid booking in the records 
+	 * of Booking Reference and whether it is found in the record of booking list. 
+	 * @param refString is checked to match the predefined format of Booking Reference 
+	 * and also to exist into the recorded bookings
+	 * @param surString is checked to be a typical surname
+	 * also it is checked if it matches the booking reference
+	 * @return a String showing the validity of the inputs
+	 *  if the given string matches one of the booking records
+	 * or otherwise what the type of mismatch is there  
+	 */
+	private boolean VerifyBooking (String refString, String surString) {
+		if (!CheckBookingRefFormat(refString)){
+			kioskEvent= "The given string does not match the format of booking reference";
+			return false;
+		}
+		if (!CheckSurnameFormat(surString)){
+			kioskEvent= "The given string could not be a surname";
+			return false;			
+		}
+		if (bookings.get(refString)==null){
+			kioskEvent= "The given code is not found in the booking records";
+			return false;			
+		}
+		if (!surString.equals(bookings.get(refString).GetSurname())){
+			kioskEvent= "The given surname does not correspond to the recorded booking refernce";
+			return false;			
+		}
+		kioskEvent= "The booking was found in the records successfully";
+		return true;
+	}
 	
-	
+	private void GetPassengersForQueue() {
+		ArrayList<Passenger> passengersForQueue = passengerGenerator.PassengersToJoinTheQueue();
+		for(Passenger newPassenger : passengersForQueue) {
+			passengerQueue.PassengerJoiningQueue(newPassenger);
+		}
+		
+		passengerGenerator.PassengersAreNowInQueue();
+	}
+		
+	private void QueueUpdate() {
+		if(passengerQueue.HasAPassengerJoinedTheQueue()) {
+			// TODO: Use passengerQueue.SizeOfQueue to update GUI size of queue info.
+			passengerQueue.ResetPassengerJoinedIndicator();
+		}
+		
+		if(passengerQueue.HasChangeToQueueDisplayInfoBeenMade() ) {
+			// TODO: Use passengerQueue.HeadOfTheQueue() to update GUI queue display. 
+			passengerQueue.ResetChangeToQueueDisplayIndicator();
+		}
+	}
 }

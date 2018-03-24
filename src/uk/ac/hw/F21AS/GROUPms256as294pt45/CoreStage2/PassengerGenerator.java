@@ -96,9 +96,6 @@ public class PassengerGenerator extends Observable implements Runnable  {
 		return passengers.remove(index);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
 	@Override
 	public void run() {
 		int waitTime = 0;
@@ -139,6 +136,5 @@ public class PassengerGenerator extends Observable implements Runnable  {
 			setChanged();
 			notifyObservers();
 		}
-		
 	}
 }
