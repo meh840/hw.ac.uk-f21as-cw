@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package src.uk.ac.hw.F21AS.GROUPms256as294pt45.CoreStage2;
 
 import java.io.IOException;
@@ -29,17 +27,12 @@ public class CheckinController implements Observer{
 	private TreeMap<String, Flight> flights;
 	private ArrayList<String> invalidFormatErrors;
 	private ErrorLogger errorLogger;
-	private static RuntimeSpeedController simulationSpeed;
 	private PassengerGenerator passengerGenerator;
 	private AutoKiosk kiosk1, kiosk2;
 	private MannedKiosk mannedKiosk;
 	private PassengerQueue passengerQueue;
 	public String kioskEvent;
-	public int NumPassengersInQueue; 
-	private int pauseForPayment;
-	private int pauseForEntryCheck;	
-	private int pauseForBoarding;
-	private int pauseInMannedKiosk;
+	private SimulationClock simulationClock;
 	
 	
 	public CheckinController(){
@@ -58,31 +51,17 @@ public class CheckinController implements Observer{
 		
 		errorLogger = new ErrorLogger();
 		
-		simulationSpeed = RuntimeSpeedController.getInstance();
-		
-		CollectDataFromFiles();
-		
 		passengerGenerator = new PassengerGenerator(bookings, invalidFormatErrors);
-		passengerQueue.list= passengerGenerator.InitialPassengersForQueue();
 		
-		kiosk1.SetBookings(bookings);
-		kiosk2.SetBookings(bookings);
-		kiosk1.SetFlights(flights);
-		kiosk2.SetFlights(flights);
-
-		pauseForPayment = 0;
-		pauseForEntryCheck=0;	
-		pauseForBoarding=0;
-		pauseInMannedKiosk=0;
-	
-		NumPassengersInQueue=0;
 	}
 	
 	public void StartCheckin(){
+		CollectDataFromFiles();
 		passengerGenerator.run(); 
-		//passengerQueue.list=passengerGenerator.PassengersToJoinTheQueue();
 		kiosk1.addObserver(this);
 		kiosk2.addObserver(this);
+		kiosk1.SetKioskNumber(1);
+		kiosk2.SetKioskNumber(2);
 		mannedKiosk.addObserver(this);
 		kiosk1.run();
 		kiosk2.run();
@@ -120,14 +99,7 @@ public class CheckinController implements Observer{
 	//@Override 
 	public void update() {
 		// TODO Auto-generated method stub
-/*		bookings=kiosk.getBookings(); 
-		flights=kiosk.getFlights();
-		passengerQueue.list=kiosk.getPassengerQueueList();
-		kioskEvent=kiosk.getKioskEvent();
-		NumPassengersInQueue=passengerQueue.list.size();*/
-		
-			
-		ListOfObservables sourceOfEvent=getChangedSubject();
+		ListOfObservables sourceOfEvent=GetChangedSubject();
 		switch (sourceOfEvent){
 		case AUTO_KIOSK1:
 			ApplyKioskUpdates(kiosk1);
@@ -135,67 +107,187 @@ public class CheckinController implements Observer{
 		case AUTO_KIOSK2:
 			ApplyKioskUpdates(kiosk2);
 			break;			
-		case MANNED_KIOSK:
-			ApplyKioskUpdates(mannedKiosk);
-			break;
+//		case MANNED_KIOSK:
+//			ApplyKioskUpdates(mannedKiosk);
+//			break;
 		case PASSENGER_GENERATOR:
 			break;
-		case PASSENGERQUEUE:
+		case PASSENGER_QUEUE:
 			break;
 		case SIMULATION_CLOCK:
+			break;
+		default:
 			break;
 		
 		}
 		
 	}
 	
-	private ListOfObservables getChangedSubject(){
+	private ListOfObservables GetChangedSubject(){
 		if (kiosk1.hasChanged()){
 			return ListOfObservables.AUTO_KIOSK1;
 		}else if (kiosk2.hasChanged()){
 			return ListOfObservables.AUTO_KIOSK2;
 		}else if (mannedKiosk.hasChanged()){
 			return ListOfObservables.MANNED_KIOSK;
+		}else if (passengerGenerator.hasChanged()){
+			return ListOfObservables.PASSENGER_GENERATOR;
+		}else if (passengerQueue.hasChanged()){
+			return ListOfObservables.PASSENGER_QUEUE;
+		}else if (simulationClock.hasChanged()){
+			return ListOfObservables.SIMULATION_CLOCK;
 		}
 		return null;
 	}
+
 	
 	private void ApplyKioskUpdates(AutoKiosk updatedKiosk){
-		Object updatedElement=updatedKiosk.getUpdatedElement();
-		kioskEvent=updatedKiosk.getKioskEvent();
-		if (updatedElement instanceof Booking){
-			Booking updatedBooking=(Booking) updatedElement;
-			bookings.replace(updatedBooking.GetBookingReference(), updatedBooking);
-		}
-		if (updatedElement instanceof Flight){
-			Flight updatedFlight=(Flight) updatedElement;
-			flights.replace(updatedFlight.FlightCode(), updatedFlight);
-		}
-		if (updatedElement instanceof PassengerQueue){
-			PassengerQueue updatedPassengerQueue=(PassengerQueue) updatedElement;
-			passengerQueue=updatedPassengerQueue;
-			//.HeadToKiosk();// current passenger is no longer in the Queue		}
+		KioskStatus kioskStatus=updatedKiosk.GetKioskStatus();
+		Passenger passenger;
+		Attempt attempt;
+		String bookingRef, surname, flightCode;
+		Booking booking;
+		Flight flight;
+		BaggageDetails baggageInfo;
+		double fee;
+		switch (kioskStatus){
+		case GET_PASSENGER:
+			updatedKiosk.SetPassenger(passengerQueue.HeadToKiosk());
+			kioskEvent="A Passenger from the Queue refered to AutoKiosk "+updatedKiosk.GetKioskNumber();
+			break;
+		case CHECK_ENTRIES:
+			passenger= updatedKiosk.GetPassenger();
+			attempt=passenger.CheckInDetails();
+			bookingRef=attempt.BookingReference();
+			surname=attempt.Surname();
+			updatedKiosk.SetEntryIsValid(VerifyBooking(bookingRef,surname));
+			updatedKiosk.SetUseManned(attempt.UseMannedKiosk());
+			kioskEvent="Passenger with booking reference "+bookingRef+
+					" is entering their details on AutoKiosk "+updatedKiosk.GetKioskNumber();
+			break;
+		case SEND_TO_MANNED_KIOSK:
+			passenger= updatedKiosk.GetPassenger();
+			Object[] info = passenger.QueueDisplayInformation();
+			flightCode=(String) info[2];
+			kioskEvent="A passenger was sent from the Manned Kiosk to Flight No."+flightCode;
+			break;
+		case GET_BAGGAGE:
+			passenger= updatedKiosk.GetPassenger();
+			bookingRef=passenger.CheckInDetails().BookingReference();
+			booking=bookings.get(bookingRef);
+			baggageInfo=booking.GetBaggageInfo();
+			fee=baggageInfo.Fee();
+			updatedKiosk.SetFee(fee);
+			kioskEvent="Passenger with booking reference " + bookingRef +
+			" on AutoKiosk "+updatedKiosk.GetKioskNumber()+" charged £" +
+					fee + " for baggage";
+			break;
+		case SEND_TO_PLANE:
+			passenger= updatedKiosk.GetPassenger();
+			bookingRef=passenger.CheckInDetails().BookingReference();
+			booking=bookings.get(bookingRef);
+			baggageInfo=booking.GetBaggageInfo();
+			fee=baggageInfo.Fee();
+			booking.CheckIn();
+			flightCode=booking.GetFlightCode();
+			flight=flights.get(flightCode);
+			flight.AddToFees(fee);				
+			flight.AddToWeight(baggageInfo.Weight());
+			flight.AddToVolume(baggageInfo.Volume());
+			kioskEvent="Passenger with booking reference "+ bookingRef +
+					" on AutoKiosk "+updatedKiosk.GetKioskNumber()+" sent to Plane";
+			break;
+		default:
+			break;
 		}
 
 	}
 
-	
-	private void ApplyKioskUpdates(MannedKiosk updatedKiosk){
+	/**
+	 * verifies if the given string matches the predefined format of booking references	
+	 * @param refString is a string which is supposed to be a booking reference
+	 * @returns true if the string matches the format, false otherwise
+	 */
+		private Boolean CheckBookingRefFormat (String refString) {
+			final int referenceSize=7;
+			String bookingRef=refString.trim();
+			bookingRef=bookingRef.toUpperCase();
+			if (refString == null || refString.isEmpty() || 
+				refString.toCharArray().length <referenceSize ||
+				refString.toCharArray().length >referenceSize ||
+				!(Character.isLetter(bookingRef.charAt(0)) &&
+				  Character.isLetter(bookingRef.charAt(1)) &&
+				  Character.isDigit(bookingRef.charAt(2)) &&
+				  Character.isDigit(bookingRef.charAt(3)) &&
+				  Character.isLetter(bookingRef.charAt(4)) &&
+				  Character.isLetter(bookingRef.charAt(5)) &&
+				  Character.isDigit(bookingRef.charAt(6)))){
+				return false;
+			}else{
+				return true;
+			}
+		}
 
-	}
-	
-	private void SetKiosksPause(){
-		pauseForPayment = simulationSpeed.RandomWaitTime(200);
-		pauseForEntryCheck=simulationSpeed.TimeToEnterDetails();	
-		pauseForBoarding=simulationSpeed.RandomWaitTime(50);
+		/**
+		 * verifies the given string to be potentially a surname 
+		 * @param refString which is supposed to be a surname
+		 * @return true if the input is deduced as a surname, false otherwise
+		 */
+		private Boolean CheckSurnameFormat(String surString) {
+			String surname=surString.trim();
+			String s1 = surname.substring(0, 1).toUpperCase();
+			surname=s1 + surname.substring(1).toLowerCase();
+			if (surString == null || surString.isEmpty()) {
+				return false;
+			}
+			for(char c : surString.toCharArray()){
+		        if(Character.isDigit(c) || Character.isSpaceChar(c)){
+		        	return false;
+		        }
+			}
+			return true;
+		}
 
-		kiosk1.SetPauseForPayment(pauseForPayment);
-		kiosk1.SetPauseForEntryCheck(pauseForEntryCheck);
-		kiosk1.SetPauseForBoarding(pauseForBoarding);
-		kiosk2.SetPauseForPayment(pauseForPayment);
-		kiosk2.SetPauseForEntryCheck(pauseForEntryCheck);
-		kiosk2.SetPauseForBoarding(pauseForBoarding);
-		mannedKiosk.SetPauseTotal(pauseInMannedKiosk);
+		/**
+		 * checks if the given strings refer to a valid booking in the records 
+		 * of Booking Reference and whether it is found in the record of booking list. 
+		 * @param refString is checked to match the predefined format of Booking Reference 
+		 * and also to exist into the recorded bookings
+		 * @param surString is checked to be a typical surname
+		 * also it is checked if it matches the booking reference
+		 * @return a String showing the validity of the inputs
+		 *  if the given string matches one of the booking records
+		 * or otherwise what the type of mismatch is there  
+		 */
+		private boolean VerifyBooking (String refString, String surString) {
+			if (!CheckBookingRefFormat(refString)){
+				kioskEvent= "The given string does not match the format of booking reference";
+				return false;
+			}
+			if (!CheckSurnameFormat(surString)){
+				kioskEvent= "The given string could not be a surname";
+				return false;			
+			}
+			if (bookings.get(refString)==null){
+				kioskEvent= "The given code is not found in the booking records";
+				return false;			
+			}
+			if (!surString.equals(bookings.get(refString).GetSurname())){
+				kioskEvent= "The given surname does not correspond to the recorded booking refernce";
+				return false;			
+			}
+			kioskEvent= "The booking was found in the records successfully";
+			return true;
+		}
+			
+	
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	
