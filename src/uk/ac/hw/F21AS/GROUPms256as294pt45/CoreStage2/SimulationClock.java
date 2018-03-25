@@ -18,6 +18,7 @@ public final class SimulationClock extends Observable implements Runnable {
 	private RuntimeSpeedController simulationSpeed = RuntimeSpeedController.getInstance();
 	private static SimulationClock clock = null; 
 	private boolean keepTicking = true;
+	private boolean departureDue = false;
 	private ArrayList<String> departureTimes = new ArrayList<String>();
 	
 	/**
@@ -32,7 +33,6 @@ public final class SimulationClock extends Observable implements Runnable {
 	public static SimulationClock GetInstance() {
 		if(clock == null) {
 			clock = new SimulationClock();
-			clock.run();
 		}
 		
 		return clock;
@@ -117,6 +117,13 @@ public final class SimulationClock extends Observable implements Runnable {
 	}
 	
 	/**
+	 * Resets departure indicator after planes have been checked.
+	 */
+	public void PlanesChecked() {
+		departureDue = false;
+	}
+	
+	/**
 	 * Checks if a departure is due and will remove from list and notify change to check with planes.
 	 */
 	private void DepartureDue() {
@@ -124,6 +131,7 @@ public final class SimulationClock extends Observable implements Runnable {
 		
 		if(departureTimes.contains(currentTime)) {
 			departureTimes.remove(currentTime);
+			departureDue = true;
 			
 			setChanged();
 			notifyObservers();
@@ -151,6 +159,10 @@ public final class SimulationClock extends Observable implements Runnable {
 	private void IncreaseMinutes(int numberOfIncreaments) {
 		for(int c = 0; c < numberOfIncreaments; c++) {
 			minutes++;
+				
+			setChanged();
+			notifyObservers();
+			
 			if(minutes == 60) {
 				minutes = 0;
 				IncreaseHours(1);

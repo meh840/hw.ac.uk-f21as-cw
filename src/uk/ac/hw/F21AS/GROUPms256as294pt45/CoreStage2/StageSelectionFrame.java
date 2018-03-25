@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.KioskLogic;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -171,17 +174,21 @@ public class StageSelectionFrame extends JFrame implements ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getSource() == close) {
     		JOptionPane.showMessageDialog(this, 
     				 " thank you ");
     		System.exit(0);
 		}
 		else if (e.getSource() == stage1) {
-    		
+			KioskLogic kiosk = new KioskLogic();
+			
+			kiosk.ReadyKiosk();
+			kiosk.StartUpKiosk();
+    		this.dispose();
 		}
 		else if (e.getSource() == stage2) {
-    		SimulationGUI kiosktest= new SimulationGUI();
+			CheckinController controller = new CheckinController();
+			controller.StartCheckin();
     		this.dispose();
 		}
 		else if (e.getSource() == info) {

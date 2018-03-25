@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Booking;
@@ -26,6 +27,7 @@ public class CheckinController implements Observer{
 	private FlightLoader flightLoader;
 	private TreeMap<String, Booking> bookings;
 	private TreeMap<String, Flight> flights;
+	private TreeMap<String,Plane> planes;
 	private ArrayList<String> invalidFormatErrors;
 	private ErrorLogger errorLogger;
 	private PassengerGenerator passengerGenerator;
@@ -34,6 +36,7 @@ public class CheckinController implements Observer{
 	private MannedKiosk mannedKiosk;
 	public String kioskEvent;
 	private SimulationClock simulationClock;
+	private StageSelectionFrame gui;
 		
 	public CheckinController(){
 		// File locations.
@@ -48,9 +51,12 @@ public class CheckinController implements Observer{
 		bookings = new TreeMap<String, Booking>();
 		flights = new TreeMap<String, Flight>();
 		invalidFormatErrors = new ArrayList<String>();
+		planes = new TreeMap<String, Plane>();
 		
 		errorLogger = new ErrorLogger();
 		simulationClock = SimulationClock.GetInstance();
+		Thread clockThread = new Thread(simulationClock);
+		clockThread.start();
 		
 		CollectDataFromFiles();
 		
@@ -61,6 +67,9 @@ public class CheckinController implements Observer{
 		for(Passenger newPassenger : passengersForQueue) {
 			passengerQueue.PassengerJoiningQueue(newPassenger);
 		}
+		
+		PreparePlanes();
+		PrepareGUI();
 	}
 	
 	public void StartCheckin(){
@@ -79,14 +88,15 @@ public class CheckinController implements Observer{
 		passengerQueue.addObserver(this);
 		
 		// Start up desks.
-		kiosk1.run();
-		kiosk2.run();
-		mannedKiosk.run();
+		Thread kiosk1Thread = new Thread(kiosk1);
+		//kiosk1Thread.start();
+		Thread kiosk2Thread = new Thread(kiosk2);
+		//kiosk2Thread.start();
+		Thread mannedKioskThread = new Thread(mannedKiosk);
+		//mannedKioskThread.start();
 		
 		// Send passengers to kiosks.
-		
-		// Add Display Events GUI
-		
+	
 	}
 
 	/**
@@ -109,6 +119,24 @@ public class CheckinController implements Observer{
 		} catch (IOException e) {
 			errorLogger.addUnexpectedError("Flight file triggered an IOException");
 		}
+	}
+	
+	/**
+	 * Create the planes for the passengers to board.
+	 */
+	private void PreparePlanes() {
+		// Create planes for all flights.
+		for(Entry<String, Flight> entry : flights.entrySet()) {
+		  Flight value = entry.getValue();
+
+		  Plane newPlane = new Plane(value.FlightCode(), value);
+		  planes.put(value.FlightCode(), newPlane);
+		}
+	}
+	
+	public void PrepareGUI() {
+		gui = new StageSelectionFrame();
+		// TODO: Give gui queue information passengerQueue.HeadOfTheQueue()
 	}
 	
 	@Override
