@@ -58,6 +58,7 @@ public class CheckinController implements Observer{
 		Thread clockThread = new Thread(simulationClock);
 		clockThread.start();
 		
+		
 		CollectDataFromFiles();
 		
 		// Set up passenger generation and have an initial amount in the queue.
@@ -75,7 +76,7 @@ public class CheckinController implements Observer{
 	public void StartCheckin(){
 		// Start having passengers randomly join queue.
 		passengerGenerator.run(); 
-		
+		//simulationClock = SimulationClock.GetInstance();
 		// Define Kiosks.
 		kiosk1.SetKioskNumber(1);
 		kiosk2.SetKioskNumber(2);
@@ -221,7 +222,7 @@ public class CheckinController implements Observer{
 			fee=baggageInfo.Fee();
 			updatedKiosk.SetFee(fee);
 			kioskEvent="Passenger with booking reference " + bookingRef +
-			" on AutoKiosk "+updatedKiosk.GetKioskNumber()+" charged £" +
+			" on AutoKiosk "+updatedKiosk.GetKioskNumber()+" charged ï¿½" +
 					fee + " for baggage";
 			break;
 		case SEND_TO_PLANE:

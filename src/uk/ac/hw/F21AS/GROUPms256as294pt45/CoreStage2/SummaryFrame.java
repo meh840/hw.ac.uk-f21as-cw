@@ -52,7 +52,7 @@ public class SummaryFrame extends JFrame  implements ActionListener{
 	private void setupNorthPanel() {
 		// TODO Auto-generated method stub
 		JPanel titlePanel = new JPanel();
-		SummaryLabel = new JLabel("hello");
+		SummaryLabel = new JLabel("Display Events");
 		SummaryLabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,30));
         titlePanel.add(SummaryLabel);   
         

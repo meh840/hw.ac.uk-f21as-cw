@@ -143,35 +143,6 @@ public class StageSelectionFrame extends JFrame implements ActionListener {
 		this.add(setupCenterPanel,BorderLayout.CENTER);
 	}
 
-	/**
-	 * @param arg0
-	 *//*
-	public StageSelectionFrame(GraphicsConfiguration arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
-
-	*//**
-	 * @param arg0
-	 * @throws HeadlessException
-	 *//*
-	public StageSelectionFrame(String arg0) throws HeadlessException {
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
-
-	*//**
-	 * @param arg0
-	 * @param arg1
-	 *//*
-	public StageSelectionFrame(String arg0, GraphicsConfiguration arg1) {
-		super(arg0, arg1);
-		// TODO Auto-generated constructor stub
-	}
-*/
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == close) {

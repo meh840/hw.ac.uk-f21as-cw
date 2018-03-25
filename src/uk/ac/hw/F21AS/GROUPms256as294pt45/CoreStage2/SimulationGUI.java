@@ -7,6 +7,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
+
 public class SimulationGUI extends JFrame  implements ActionListener{
 	
 	JLabel title,flight1,flight2,flight3,desk1,desk2
@@ -15,21 +17,31 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 	JScrollPane QueueList,flightList1,flightList2,flightList3;
 	JTextField queueinfo,flightinfo1,flightinfo2,flightinfo3;
 	JCheckBox spbox1,spbox2,spbox3;
-	JButton close;
+	JButton stop;
 	JTable queueList,flight1table,flight2table,flight3table;
 	GridBagConstraints c;
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	private RuntimeSpeedController runtimeSpeed;
-	//private SimulationClock Clock;
+	private SimulationClock Clock;
+	private PassengerQueue a;
 	private String [] Qlistlabels = {"Reference Number","Name","Flight's Number"};
 	private String [] WVflightlabels = {"Weight %","Volume %"};
 	Object [][] b= {
-			{"111","Alan"},
+			{},
 			
+	};//b, Qlistlabels
+	Object [][] ab= {
+			{"111","Alan","aedf"},
+			{"111","Alan","aedf"},
+			{"111","Alan","aedf"},
 	};
-	TableModel model = new DefaultTableModel(b, WVflightlabels);
+	DefaultTableModel modelList = new DefaultTableModel(b, Qlistlabels); 
+	DefaultTableModel modelList1 = new DefaultTableModel(b, WVflightlabels); 
+	DefaultTableModel modelList2 = new DefaultTableModel(b, WVflightlabels); 
+	DefaultTableModel modelList3 = new DefaultTableModel(b, WVflightlabels); 
 	public SimulationGUI() {
 		runtimeSpeed = RuntimeSpeedController.getInstance();
+		
 		//Clock= SimulationClock.GetInstance();
 		setTitle("DISPLAY");
     	//setSize(800,800);
@@ -70,7 +82,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		};
 		
 		//the queue list
-		queueList=new JTable(a,Qlistlabels);
+		queueList=new JTable(modelList);
 		queueList.setPreferredScrollableViewportSize(new Dimension(340,400));
 		queueList.setFillsViewportHeight(true);
 		queueList.setEnabled(false);
@@ -111,7 +123,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		timePanel.add(timelabel,c);
 		
 		//display the time
-		timedisplay=new JTextArea("Time display");
+		timedisplay=new JTextArea();
 		timedisplay.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		c = new GridBagConstraints();
 		c.gridx=1;
@@ -245,7 +257,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		};
 		//display flight1 table
 		
-		flight1table=new JTable(model);
+		flight1table=new JTable(modelList1);
 		flight1table.setPreferredScrollableViewportSize(new Dimension(30,20));
 		flight1table.setEnabled(false);
 		flight1table.setFillsViewportHeight(true);
@@ -297,7 +309,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		c.fill= GridBagConstraints.VERTICAL;
 		Flight2Panel.add(flightinfo2,c);
 		
-		flight2table=new JTable(model);
+		flight2table=new JTable(modelList2);
 		flight2table.setPreferredScrollableViewportSize(new Dimension(30,20));
 		flight2table.setEnabled(false);
 		flight2table.setFillsViewportHeight(true);
@@ -318,7 +330,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		
 		JPanel Flight3Panel= new JPanel();
 		Flight3Panel.setLayout(new GridBagLayout());
-		flight3=new JLabel("Flight3");
+		flight3=new JLabel("fly");
 		flight3.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
 		c = new GridBagConstraints();
 		c.gridx=0;
@@ -336,7 +348,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		c.fill= GridBagConstraints.VERTICAL;
 		Flight3Panel.add(flight3time,c);
 		
-		flightinfo3=new JTextField("20 passengers have been allready aboard",30);
+		flightinfo3=new JTextField("20 passengers have been allready on board",30);
 		flightinfo3.setFont( new Font(Font.MONOSPACED, Font.ITALIC,15));
 		flightinfo3.setEditable(false);
 		c = new GridBagConstraints();
@@ -348,7 +360,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		c.fill= GridBagConstraints.VERTICAL;
 		Flight3Panel.add(flightinfo3,c);
 		
-		flight3table=new JTable(model);
+		flight3table=new JTable(modelList3);
 		flight3table.setPreferredScrollableViewportSize(new Dimension(30,20));
 		flight3table.setEnabled(false);
 		flight3table.setFillsViewportHeight(true);
@@ -412,7 +424,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 	private void setupNorthPanel() {
 		// TODO Auto-generated method stub
 		JPanel titlePanel = new JPanel();
-		title = new JLabel("hello");
+		title = new JLabel("Airport Check In Simulator");
 		title.setFont( new Font(Font.MONOSPACED, Font.BOLD,30));
         titlePanel.add(title);   
         
@@ -447,8 +459,8 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		spbox3.addActionListener(this);
 		
 		//JPanel closepanel=new JPanel();
-		close=new JButton("Close");
-		close.addActionListener(this);
+		stop=new JButton("Stop");
+		stop.addActionListener(this);
 		//closepanel.add(close);
 		
 		JPanel SouthPanel = new JPanel();
@@ -472,7 +484,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		c.gridwidth=5;
 		c.ipady=20;
 		c.fill= GridBagConstraints.HORIZONTAL;
-		SouthPanel.add(close,c);
+		SouthPanel.add(stop,c);
         this.add(SouthPanel, BorderLayout.SOUTH);
 	}
 
@@ -480,7 +492,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getSource() == close) {
+		if (e.getSource() == stop) {
     		SummaryFrame testSummary= new SummaryFrame();
     		this.dispose();
 		}	
@@ -493,6 +505,58 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		if (e.getSource() == spbox3) {
 			runtimeSpeed.SetRuntimeSpeed(3);
 		}
+	}
+	public void settheList(Object[][] headofqueue){
+		modelList=new  DefaultTableModel(headofqueue, Qlistlabels);
+	}
+	public void setflightlist1(Object[][] headofqueue){
+		modelList1=new  DefaultTableModel(headofqueue, Qlistlabels);
+	}
+	public void setflightlist2(Object[][] headofqueue){
+		modelList2=new  DefaultTableModel(headofqueue, Qlistlabels);
+	}
+	public void setflightlist3(Object[][] headofqueue){
+		modelList3=new  DefaultTableModel(headofqueue, Qlistlabels);
+	}
+	
+	public void setkiosk1info(String kiosk1info) {
+		deskinfo1.setText(kiosk1info);
+	}
+	public void setkiosk2info(String kiosk2info) {
+		deskinfo2.setText(kiosk2info);
+	}
+	public void setflight1time(String flightdep) {
+		flight1time.setText(flightdep);
+	}
+	public void setflight2time(String flightdep) {
+		flight2time.setText(flightdep);
+	}
+	public void setf(String flightdep) {
+		flight3time.setText(flightdep);
+	}
+	public void setpassengersonboard1(String numPassengers) {
+		flightinfo1.setText(numPassengers);
+	}
+	public void setpassengersonboard2(String numPassengers) {
+		flightinfo2.setText(numPassengers);
+	}
+	public void setpassengersonboard3(String numPassengers) {
+		flightinfo3.setText(numPassengers);
+	}
+	public void setqueuestage(String queuestage) {
+		queueinfo.setText(queuestage);
+	}
+	public void setclock(String time) {
+		timedisplay.setText(time);
+	}
+	public void setflight1title(String flighttitle) {
+		flight1.setText(flighttitle);
+	}
+	public void setflight2title(String flighttitle) {
+		flight2.setText(flighttitle);
+	}
+	public void setflight3tilte(String flighttitle) {
+		flight3.setText(flighttitle);
 	}
 
 }

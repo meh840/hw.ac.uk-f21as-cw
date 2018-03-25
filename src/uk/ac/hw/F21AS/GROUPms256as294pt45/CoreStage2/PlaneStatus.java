@@ -115,6 +115,19 @@ public class PlaneStatus {
 	}
 	
 	/**
+	 * it creates a string to be use as a flight title in the simulationGUI.
+	 * @return a string with flight code and destination.
+	 */
+	public String flighttitle() {
+		String flightname="";
+		flightname+= flightCode+" to ";
+		flightname+= destination;
+		
+		return flightname;
+		
+	}
+	
+	/**
 	 * Gives an entry for the event logger for this update.
 	 * @return A string stating what this update is.
 	 */

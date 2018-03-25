@@ -132,4 +132,6 @@ public class Plane extends Observable {
 		
 		return departure;
 	}
+	
+	
 }
