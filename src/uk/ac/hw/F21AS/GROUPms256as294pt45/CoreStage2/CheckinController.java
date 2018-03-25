@@ -83,6 +83,8 @@ public class CheckinController implements Observer{
 		kiosk2.run();
 		mannedKiosk.run();
 		
+		// Send passengers to kiosks.
+		
 		// Add Display Events GUI
 		
 	}

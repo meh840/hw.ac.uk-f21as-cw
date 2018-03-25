@@ -14,7 +14,8 @@ public class PassengerQueue extends Observable {
 	private ArrayList<Passenger> queue;
 	
 	/**
-	 * 
+	 * Constructor for Passenger Queue. 
+	 * Get queue ready for passengers, set indicators to false.
 	 */
 	public PassengerQueue() {
 		queue = new ArrayList<Passenger>();
@@ -22,10 +23,18 @@ public class PassengerQueue extends Observable {
 		passengerJoinsQueue = false;
 	}
 	
+	/**
+	 * Find out if the queue is empty.
+	 * @return True: Empty. False: Passengers in queue.
+	 */
 	public boolean IsQueueEmpty() {
 		return queue.isEmpty();
 	}
 	
+	/**
+	 * Allow a passenger to join the end of the queue.
+	 * @param newPassenger Passenger for the end of the queue.
+	 */
 	public synchronized void PassengerJoiningQueue(Passenger newPassenger) {
 		queue.add(newPassenger);
 		passengerJoinsQueue = true;
@@ -39,18 +48,34 @@ public class PassengerQueue extends Observable {
 		notifyObservers();
 	}
 	
+	/**
+	 * Indicates if a passenger has joined the end of the queue.
+	 * @return True: Passenger has joined the queue. False: No change.
+	 */
 	public boolean HasAPassengerJoinedTheQueue() {
 		return passengerJoinsQueue;
 	}
 	
+	/**
+	 * Tells how many passengers are in the queue.
+	 * @return How many are in the queue.
+	 */
 	public int SizeOfQueue() {
 		return queue.size();
 	}
 	
+	/**
+	 * Once a passenger has gone to a kiosk, use this to reset so updates only happen 
+	 * when needed.
+	 */
 	public void ResetPassengerJoinedIndicator() {
 		passengerJoinsQueue = false;
 	}
 	
+	/**
+	 * Get the passenger from the front of the queue and notify observers.
+	 * @return The passenger at the front of the queue.
+	 */
 	public synchronized Passenger HeadToKiosk() {
 		queueDisplayChange = true;
 
@@ -60,10 +85,18 @@ public class PassengerQueue extends Observable {
 		return queue.remove(0);
 	}
 	
+	/**
+	 * See if the front of the queue has changed to know if GUI needs updated.
+	 * @return True: Passengers at front have changed. False: No change to front of queue.
+	 */
 	public boolean HasChangeToQueueDisplayInfoBeenMade() {
 		return queueDisplayChange;
 	}
 	
+	/**
+	 * Gives the information of the passengers at the front of the queue, up to 10.
+	 * @return An object 2D array holding each booking reference, name & flight code.
+	 */
 	public Object[][] HeadOfTheQueue() {
 		int numberOfPassngers = queue.size();
 		
@@ -89,6 +122,10 @@ public class PassengerQueue extends Observable {
 		return headOfQueue;
 	}
 	
+	/**
+	 * Once the new display information has been taken, use this to reset so updates 
+	 * only happen when needed.
+	 */
 	public void ResetChangeToQueueDisplayIndicator() {
 		queueDisplayChange = false;
 	}
