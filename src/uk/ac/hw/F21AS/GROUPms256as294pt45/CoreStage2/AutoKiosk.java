@@ -94,8 +94,15 @@ public class AutoKiosk extends Observable implements Runnable {
 	private void StayAvailable(){
 		while (queueEmpty) {
 			kioskStatusList=KioskStatusList.WAITING_FOR_PASSENGER;
-			try { wait(); }
-			catch (InterruptedException e) {}
+
+			// Wait half a second.
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// Restore the interrupted status
+			    Thread.currentThread().interrupt(); 
+			    // TODO: Not sure if this is how I want this handled.
+			}
 		}
 		kioskStatusList=KioskStatusList.HAS_PASSENGER;//This is just to say NOT WAITING_FOR_PASSENGER 
 	}

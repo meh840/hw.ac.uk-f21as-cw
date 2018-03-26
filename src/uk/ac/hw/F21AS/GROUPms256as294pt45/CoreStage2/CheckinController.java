@@ -62,6 +62,7 @@ public class CheckinController implements Observer{
 		
 		errorLogger = new ErrorLogger();
 		simulationClock = SimulationClock.GetInstance();
+		simulationClock.addObserver(this);
 		checkinRunning=true;
 		Thread clockThread = new Thread(simulationClock);
 		clockThread.start();
@@ -85,10 +86,6 @@ public class CheckinController implements Observer{
 	}
 	
 	public void StartCheckin(){
-		// Start having passengers randomly join queue.
-		Thread pgThread = new Thread(passengerGenerator);
-		pgThread.start(); 
-		
 		// Define Kiosks.
 		autoKiosk1.SetKioskNumber(1);
 		autoKiosk2.SetKioskNumber(2);
@@ -102,14 +99,15 @@ public class CheckinController implements Observer{
 		
 		// Start up desks.
 		Thread kiosk1Thread = new Thread(autoKiosk1);
-		//kiosk1Thread.start();
+		kiosk1Thread.start();
 		Thread kiosk2Thread = new Thread(autoKiosk2);
-		//kiosk2Thread.start();
+		kiosk2Thread.start();
 		Thread mannedKioskThread = new Thread(mannedKiosk);
 		//mannedKioskThread.start();
 		
-		// Send passengers to kiosks.
-	
+		// Start having passengers randomly join queue.
+		Thread pgThread = new Thread(passengerGenerator);
+		pgThread.start(); 
 	}
 
 	/**
@@ -157,7 +155,7 @@ public class CheckinController implements Observer{
 	
 	@Override
 	public void update(Observable observable, Object object) {
-		ObservablesList sourceOfEvent=GetChangedSubject();
+		ObservablesList sourceOfEvent=GetChangedSubject(observable);
 		switch (sourceOfEvent){
 		case AUTO_KIOSK1:
 			ApplyKioskUpdates(autoKiosk1);
@@ -183,18 +181,21 @@ public class CheckinController implements Observer{
 		}
 	}
 	
-	private ObservablesList GetChangedSubject(){
-		if (autoKiosk1.hasChanged()){
-			return ObservablesList.AUTO_KIOSK1;
-		}else if (autoKiosk2.hasChanged()){
-			return ObservablesList.AUTO_KIOSK2;
-		}else if (mannedKiosk.hasChanged()){
+	private ObservablesList GetChangedSubject(Observable observable){
+		if (observable instanceof AutoKiosk){
+			AutoKiosk kiosk = (AutoKiosk) observable;
+			if (kiosk.GetKioskNumber() == 1){
+				return ObservablesList.AUTO_KIOSK1;
+			} else {
+				return ObservablesList.AUTO_KIOSK2;
+			}
+		}else if (observable instanceof MannedKiosk){
 			return ObservablesList.MANNED_KIOSK;
-		}else if (passengerGenerator.hasChanged()){
+		}else if (observable instanceof PassengerGenerator){
 			return ObservablesList.PASSENGER_GENERATOR;
-		}else if (passengerQueue.hasChanged()){
+		}else if (observable instanceof PassengerQueue){
 			return ObservablesList.PASSENGER_QUEUE;
-		}else if (simulationClock.hasChanged()){
+		}else if (observable instanceof SimulationClock){
 			return ObservablesList.SIMULATION_CLOCK;
 		}
 		return null;
@@ -363,7 +364,7 @@ public class CheckinController implements Observer{
 		if(simulationClock.IsThereADepartureDue()) {
 			//TODO: Check planes 
 		} else {
-			
+			gui.setclock(simulationClock.CurrentTime());
 		}
 	}
 }
