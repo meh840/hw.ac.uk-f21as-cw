@@ -192,14 +192,14 @@ public class CheckinController implements Observer{
 			} else {
 				return ObservablesList.AUTO_KIOSK2;
 			}
-		}else if (observable instanceof MannedKiosk){
-			return ObservablesList.MANNED_KIOSK;
-		}else if (observable instanceof PassengerGenerator){
-			return ObservablesList.PASSENGER_GENERATOR;
-		}else if (observable instanceof PassengerQueue){
-			return ObservablesList.PASSENGER_QUEUE;
-		}else if (observable instanceof SimulationClock){
-			return ObservablesList.SIMULATION_CLOCK;
+			}else if (observable instanceof MannedKiosk){
+				return ObservablesList.MANNED_KIOSK;
+			}else if (observable instanceof PassengerGenerator){
+				return ObservablesList.PASSENGER_GENERATOR;
+			}else if (observable instanceof PassengerQueue){
+				return ObservablesList.PASSENGER_QUEUE;
+			}else if (observable instanceof SimulationClock){
+				return ObservablesList.SIMULATION_CLOCK;
 		}
 		return null;
 	}
