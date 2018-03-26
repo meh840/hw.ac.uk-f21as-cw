@@ -34,7 +34,8 @@ public class CheckinController implements Observer{
 	private PassengerQueue passengerQueue;
 	private AutoKiosk kiosk1, kiosk2;
 	private MannedKiosk mannedKiosk;
-	public String kioskEvent;
+	private String kiosk1Event, kiosk2Event;
+	private ArrayList<String> CurrentEvent;
 	private SimulationClock simulationClock;
 	private StageSelectionFrame gui;
 		
@@ -144,25 +145,26 @@ public class CheckinController implements Observer{
 	public void update(Observable observable, Object object) {
 		ListOfObservables sourceOfEvent=GetChangedSubject();
 		switch (sourceOfEvent){
-			case AUTO_KIOSK1:
-				ApplyKioskUpdates(kiosk1);
-				break;
-			case AUTO_KIOSK2:
-				ApplyKioskUpdates(kiosk2);
-				break;			
-	//		case MANNED_KIOSK:
-	//			ApplyKioskUpdates(mannedKiosk);
-	//			break;
-			case PASSENGER_GENERATOR:
-				GetPassengersForQueue();
-				break;
-			case PASSENGER_QUEUE:
-				QueueUpdate();
-				break;
-			case SIMULATION_CLOCK:
-				break;
-			default:
-				break;
+		case AUTO_KIOSK1:
+			ApplyKioskUpdates(kiosk1);
+			break;
+		case AUTO_KIOSK2:
+			ApplyKioskUpdates(kiosk2);
+			break;			
+		case MANNED_KIOSK:
+			ApplyMannedKioskUpdates(mannedKiosk);
+			break;
+		case PASSENGER_GENERATOR:
+			GetPassengersForQueue();
+			break;
+		case PASSENGER_QUEUE:
+			QueueUpdate(); 
+			break;
+		case SIMULATION_CLOCK:
+			break;
+		default:
+			break;
+		
 		}
 	}
 	
@@ -183,47 +185,72 @@ public class CheckinController implements Observer{
 		return null;
 	}
 
+	/**
+	 * @param mannedKiosk2
+	 */
+	private void ApplyMannedKioskUpdates(Passenger givenPassenger) {
+		// TODO Auto-generated method stub
+		
+		
+		
+	}
 	
 	private void ApplyKioskUpdates(AutoKiosk updatedKiosk){
 		KioskStatus kioskStatus=updatedKiosk.GetKioskStatus();
 		Passenger passenger;
 		Attempt attempt;
-		String bookingRef, surname, flightCode;
+		String bookingRef, surname, flightCode, kioskEvent;
 		Booking booking;
 		Flight flight;
 		BaggageDetails baggageInfo;
 		double fee;
+		mannedKiosk.SetPassenger(null);
+		String str;
 		switch (kioskStatus){
-		case GET_PASSENGER:
+/*		case GET_PASSENGER:
 			updatedKiosk.SetPassenger(passengerQueue.HeadToKiosk());
-			kioskEvent="A Passenger from the Queue refered to AutoKiosk "+updatedKiosk.GetKioskNumber();
-			break;
+			kioskEvent="A Passenger from the Queue just referred";
+			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
+			CurrentEvent.add(str);
+			break;*/
 		case CHECK_ENTRIES:
 			passenger= updatedKiosk.GetPassenger();
 			attempt=passenger.CheckInDetails();
 			bookingRef=attempt.BookingReference();
-			surname=attempt.Surname();
-			updatedKiosk.SetEntryIsValid(VerifyBooking(bookingRef,surname));
-			updatedKiosk.SetUseManned(attempt.UseMannedKiosk());
+			//surname=attempt.Surname();
+			updatedKiosk.SetBookingRefIsValid(bookings.containsKey(bookingRef));
 			kioskEvent="Passenger with booking reference "+bookingRef+
-					" is entering their details on AutoKiosk "+updatedKiosk.GetKioskNumber();
+					" is entering their details";
+			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
+			CurrentEvent.add(str);
 			break;
 		case SEND_TO_MANNED_KIOSK:
 			passenger= updatedKiosk.GetPassenger();
+			mannedKiosk.SetPassenger(passenger);
+			//TODO:
 			Object[] info = passenger.QueueDisplayInformation();
 			flightCode=(String) info[2];
-			kioskEvent="A passenger was sent from the Manned Kiosk to Flight No."+flightCode;
+			str="A passenger was sent from the Manned Kiosk to Flight No."+flightCode;
+			CurrentEvent.add(str);
 			break;
 		case GET_BAGGAGE:
 			passenger= updatedKiosk.GetPassenger();
 			bookingRef=passenger.CheckInDetails().BookingReference();
-			booking=bookings.get(bookingRef);
-			baggageInfo=booking.GetBaggageInfo();
-			fee=baggageInfo.Fee();
-			updatedKiosk.SetFee(fee);
 			kioskEvent="Passenger with booking reference " + bookingRef +
-			" on AutoKiosk "+updatedKiosk.GetKioskNumber()+" charged �" +
-					fee + " for baggage";
+			" delivered  their baggage";
+			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
+			CurrentEvent.add(str);
+			break;
+		case DO_PAYMENT:
+			passenger= updatedKiosk.GetPassenger();
+			bookingRef=passenger.CheckInDetails().BookingReference();
+			booking=bookings.get(bookingRef);
+			baggageInfo=updatedKiosk.GetBaggageInfo();
+			fee=baggageInfo.Fee();
+			kioskEvent="Passenger with booking reference " + bookingRef +
+			" charged �" + fee + " for baggage";
+			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
+			CurrentEvent.add(str);
 			break;
 		case SEND_TO_PLANE:
 			passenger= updatedKiosk.GetPassenger();
@@ -237,58 +264,14 @@ public class CheckinController implements Observer{
 			flight.AddToFees(fee);				
 			flight.AddToWeight(baggageInfo.Weight());
 			flight.AddToVolume(baggageInfo.Volume());
-			kioskEvent="Passenger with booking reference "+ bookingRef +
-					" on AutoKiosk "+updatedKiosk.GetKioskNumber()+" sent to Plane";
+			kioskEvent="Passenger with booking reference "+ bookingRef + " sent to Plane";
+			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
+			CurrentEvent.add(str);
 			break;
 		default:
 			break;
 		}
 
-	}
-
-	/**
-	 * verifies if the given string matches the predefined format of booking references	
-	 * @param refString is a string which is supposed to be a booking reference
-	 * @returns true if the string matches the format, false otherwise
-	 */
-	private Boolean CheckBookingRefFormat (String refString) {
-		final int referenceSize=7;
-		String bookingRef=refString.trim();
-		bookingRef=bookingRef.toUpperCase();
-		if (refString == null || refString.isEmpty() || 
-			refString.toCharArray().length <referenceSize ||
-			refString.toCharArray().length >referenceSize ||
-			!(Character.isLetter(bookingRef.charAt(0)) &&
-			  Character.isLetter(bookingRef.charAt(1)) &&
-			  Character.isDigit(bookingRef.charAt(2)) &&
-			  Character.isDigit(bookingRef.charAt(3)) &&
-			  Character.isLetter(bookingRef.charAt(4)) &&
-			  Character.isLetter(bookingRef.charAt(5)) &&
-			  Character.isDigit(bookingRef.charAt(6)))){
-			return false;
-		}else{
-			return true;
-		}
-	}
-
-	/**
-	 * verifies the given string to be potentially a surname 
-	 * @param refString which is supposed to be a surname
-	 * @return true if the input is deduced as a surname, false otherwise
-	 */
-	private Boolean CheckSurnameFormat(String surString) {
-		String surname=surString.trim();
-		String s1 = surname.substring(0, 1).toUpperCase();
-		surname=s1 + surname.substring(1).toLowerCase();
-		if (surString == null || surString.isEmpty()) {
-			return false;
-		}
-		for(char c : surString.toCharArray()){
-	        if(Character.isDigit(c) || Character.isSpaceChar(c)){
-	        	return false;
-	        }
-		}
-		return true;
 	}
 
 	/**
@@ -302,26 +285,6 @@ public class CheckinController implements Observer{
 	 *  if the given string matches one of the booking records
 	 * or otherwise what the type of mismatch is there  
 	 */
-	private boolean VerifyBooking (String refString, String surString) {
-		if (!CheckBookingRefFormat(refString)){
-			kioskEvent= "The given string does not match the format of booking reference";
-			return false;
-		}
-		if (!CheckSurnameFormat(surString)){
-			kioskEvent= "The given string could not be a surname";
-			return false;			
-		}
-		if (bookings.get(refString)==null){
-			kioskEvent= "The given code is not found in the booking records";
-			return false;			
-		}
-		if (!surString.equals(bookings.get(refString).GetSurname())){
-			kioskEvent= "The given surname does not correspond to the recorded booking refernce";
-			return false;			
-		}
-		kioskEvent= "The booking was found in the records successfully";
-		return true;
-	}
 	
 	private void GetPassengersForQueue() {
 		ArrayList<Passenger> passengersForQueue = passengerGenerator.PassengersToJoinTheQueue();
@@ -336,11 +299,21 @@ public class CheckinController implements Observer{
 		if(passengerQueue.HasAPassengerJoinedTheQueue()) {
 			// TODO: Use passengerQueue.SizeOfQueue to update GUI size of queue info.
 			passengerQueue.ResetPassengerJoinedIndicator();
-		}
+			
+			if (!passengerQueue.IsQueueEmpty()){
+				if (kiosk1.GetKioskStatus()==KioskStatus.WAIT_FOR_PASSENGER){
+					kiosk1.SetQueueEmpty(false);
+				} else if (kiosk2.GetKioskStatus()==KioskStatus.WAIT_FOR_PASSENGER){
+					kiosk2.SetQueueEmpty(false);
+				}
+			}
+				}
 		
 		if(passengerQueue.HasChangeToQueueDisplayInfoBeenMade() ) {
 			// TODO: Use passengerQueue.HeadOfTheQueue() to update GUI queue display. 
 			passengerQueue.ResetChangeToQueueDisplayIndicator();
 		}
+		
 	}
 }
+

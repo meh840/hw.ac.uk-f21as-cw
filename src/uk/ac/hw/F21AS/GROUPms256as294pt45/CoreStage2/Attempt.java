@@ -44,4 +44,6 @@ public class Attempt {
 	public Boolean UseMannedKiosk() {
 		return useMannedKiosk;
 	}
+	
+
 }

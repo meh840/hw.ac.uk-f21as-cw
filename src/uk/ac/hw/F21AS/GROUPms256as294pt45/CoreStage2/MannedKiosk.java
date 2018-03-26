@@ -11,6 +11,8 @@ import java.util.Observable;
  */
 public class MannedKiosk extends Observable implements Runnable {
 	private int pauseInMannedKiosk;
+	private Passenger passenger;
+	private KioskStatus kioskStatus;
 
 	/**
 	 * 
@@ -32,5 +34,9 @@ public class MannedKiosk extends Observable implements Runnable {
 
 	public void SetPuseInMannedKiosk(int givenPauseInMannedKiosk){
 		pauseInMannedKiosk=givenPauseInMannedKiosk;
+	}
+	
+	public void SetPassenger(Passenger givenPassenger){
+		passenger=givenPassenger;
 	}
 }
