@@ -32,7 +32,7 @@ public final class RuntimeSpeedController {
 	 * all other entries set the speed to normal rate.
 	 */
 	public void SetRuntimeSpeed(int speed) {
-		if(speed == 2 || speed == 4) {
+		if(speed == 20 || speed == 100) {
 			speedSetting = speed;
 		} else {
 			speedSetting = 1;

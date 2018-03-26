@@ -14,8 +14,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * @author 
- * appears in the beginning and allows user to select between Stage 1 and Stage 2
+ * It appears a frame which asks the user to choose which stage he wants to proceed on.
+ * @author Panagiotis Tsamoutalis (pt45)
+ *
  */
 public class StageSelectionFrame extends JFrame implements ActionListener {
 	
