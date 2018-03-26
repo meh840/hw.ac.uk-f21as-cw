@@ -7,7 +7,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 /**
- * @author Takis seddiq (ms256)
+ * This class displays the events which took place.
+ * @author Panagiotis Tsamoutalis (pt45)
  *
  */
 public class SummaryFrame extends JFrame  implements ActionListener{

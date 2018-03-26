@@ -8,7 +8,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.Flight;
-
+/**
+ * This class constructs  the simulator's GUI.
+ * We use text fields, labels, tables and text areas to display information.
+ * We feed that information with public methods
+ * @author Panagiotis Tsamoutalis (pt45)
+ *
+ */
 public class SimulationGUI extends JFrame  implements ActionListener{
 	
 	JLabel title,flight1,flight2,flight3,desk1,desk2
@@ -436,9 +442,9 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		
 		JPanel checkboxPanel=new JPanel();
 		checkboxPanel.setLayout(new GridLayout(1,3));
-		spbox1=new JCheckBox("x1");
-		spbox2=new JCheckBox("x2");
-		spbox3=new JCheckBox("x4");
+		spbox1=new JCheckBox("Regular");
+		spbox2=new JCheckBox("Fast");
+		spbox3=new JCheckBox("Very Fast");
 		ButtonGroup check = new ButtonGroup();
 		check.add(spbox1);
 		check.add(spbox2);
@@ -493,10 +499,10 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 			runtimeSpeed.SetRuntimeSpeed(1);
 		}
 		if (e.getSource() == spbox2) {
-			runtimeSpeed.SetRuntimeSpeed(2);
+			runtimeSpeed.SetRuntimeSpeed(20);
 		}
 		if (e.getSource() == spbox3) {
-			runtimeSpeed.SetRuntimeSpeed(4);
+			runtimeSpeed.SetRuntimeSpeed(100);
 		}
 	}
 	public void settheList(Object[][] headofqueue){

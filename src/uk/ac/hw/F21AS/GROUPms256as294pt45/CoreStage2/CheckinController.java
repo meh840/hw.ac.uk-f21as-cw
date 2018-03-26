@@ -361,6 +361,7 @@ public class CheckinController implements Observer{
 		if(passengerQueue.HasChangeToQueueDisplayInfoBeenMade() ) {
 			// TODO: Use passengerQueue.HeadOfTheQueue() to update GUI queue display. 
 			passengerQueue.ResetChangeToQueueDisplayIndicator();
+			gui.settheList(passengerQueue.HeadOfTheQueue());
 		}
 		
 	}
