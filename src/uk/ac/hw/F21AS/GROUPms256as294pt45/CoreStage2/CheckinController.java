@@ -39,7 +39,7 @@ public class CheckinController implements Observer{
 	private ArrayList<String> CurrentEvent;
 	private SimulationClock simulationClock;
 	private boolean checkinRunning;
-	private StageSelectionFrame GUI1;
+	private SimulationGUI gui;
 	private static String kioskTitle;
 	private static Passenger currentPassenger;
 		
@@ -144,8 +144,12 @@ public class CheckinController implements Observer{
 	}
 	
 	public void PrepareGUI() {
-		GUI1 = new StageSelectionFrame();
-		// TODO: Give GUI queue information passengerQueue.HeadOfTheQueue()
+		gui = new SimulationGUI();
+		gui.settheList(passengerQueue.HeadOfTheQueue());
+		gui.setqueuestage(Integer.toString(passengerQueue.SizeOfQueue()));
+		gui.setclock(simulationClock.CurrentTime());
+		//gui.setflight1title(flighttitle);
+		// TODO: Give gui queue information passengerQueue.HeadOfTheQueue()
 	}
 	
 	@Override

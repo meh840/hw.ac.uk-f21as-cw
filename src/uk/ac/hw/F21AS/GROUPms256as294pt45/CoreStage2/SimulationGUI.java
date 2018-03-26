@@ -509,6 +509,9 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 	public void settheList(Object[][] headofqueue){
 		modelList=new  DefaultTableModel(headofqueue, Qlistlabels);
 		queueList.setModel(modelList);
+		queueList.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
+		queueList.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+		queueList.getColumnModel().getColumn(2).setCellRenderer( centerRenderer );
 	}
 	public void setflightlist1(Object[][] headofqueue){
 		modelList1=new  DefaultTableModel(headofqueue, Qlistlabels);
