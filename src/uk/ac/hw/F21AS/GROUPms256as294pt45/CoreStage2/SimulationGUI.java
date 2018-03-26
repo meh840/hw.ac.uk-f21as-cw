@@ -114,6 +114,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		//display the time
 		timedisplay=new JTextArea();
 		timedisplay.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
+		timedisplay.setEditable(false);
 		c = new GridBagConstraints();
 		c.gridx=1;
 		c.gridy=0;
