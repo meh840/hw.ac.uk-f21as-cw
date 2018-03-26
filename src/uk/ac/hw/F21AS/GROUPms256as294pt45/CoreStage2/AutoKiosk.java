@@ -47,6 +47,7 @@ public class AutoKiosk extends Observable implements Runnable {
 		baggageInfo=null;
 		planeIsAvailable=true;
 		kioskEvent="";
+		speedController = RuntimeSpeedController.getInstance();
 		
 	}
 	

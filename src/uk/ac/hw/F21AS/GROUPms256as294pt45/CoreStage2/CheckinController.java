@@ -174,6 +174,7 @@ public class CheckinController implements Observer{
 			QueueUpdate(); 
 			break;
 		case SIMULATION_CLOCK:
+			ClockUpdate();
 			break;
 		default:
 			break;
