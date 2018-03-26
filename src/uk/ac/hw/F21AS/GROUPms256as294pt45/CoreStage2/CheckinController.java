@@ -44,6 +44,8 @@ public class CheckinController implements Observer{
 	private static Passenger currentPassenger;
 		
 	public CheckinController(){
+		gui = new SimulationGUI();
+		
 		// File locations.
 		bookingPath = "/BookingFile.txt";
 		flightPath = "/FlightFile.txt";
@@ -64,8 +66,9 @@ public class CheckinController implements Observer{
 		Thread clockThread = new Thread(simulationClock);
 		clockThread.start();
 		
-		autoKiosk1=new AutoKiosk();
-		autoKiosk2=new AutoKiosk();
+		autoKiosk1 = new AutoKiosk();
+		autoKiosk2 = new AutoKiosk();
+		mannedKiosk = new MannedKiosk();
 		
 		CollectDataFromFiles();
 		
@@ -83,7 +86,8 @@ public class CheckinController implements Observer{
 	
 	public void StartCheckin(){
 		// Start having passengers randomly join queue.
-		passengerGenerator.run(); 
+		Thread pgThread = new Thread(passengerGenerator);
+		pgThread.start(); 
 		
 		// Define Kiosks.
 		autoKiosk1.SetKioskNumber(1);
@@ -101,7 +105,7 @@ public class CheckinController implements Observer{
 		//kiosk1Thread.start();
 		Thread kiosk2Thread = new Thread(autoKiosk2);
 		//kiosk2Thread.start();
-		//Thread mannedKioskThread = new Thread(mannedKiosk);
+		Thread mannedKioskThread = new Thread(mannedKiosk);
 		//mannedKioskThread.start();
 		
 		// Send passengers to kiosks.
@@ -144,7 +148,6 @@ public class CheckinController implements Observer{
 	}
 	
 	public void PrepareGUI() {
-		gui = new SimulationGUI();
 		gui.settheList(passengerQueue.HeadOfTheQueue());
 		gui.setqueuestage(Integer.toString(passengerQueue.SizeOfQueue()));
 		gui.setclock(simulationClock.CurrentTime());
