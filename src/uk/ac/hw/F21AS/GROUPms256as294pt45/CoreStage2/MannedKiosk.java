@@ -5,6 +5,8 @@ package src.uk.ac.hw.F21AS.GROUPms256as294pt45.CoreStage2;
 
 import java.util.Observable;
 
+import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
+
 /**
  * @author mehdi seddiq (ms256)
  *
@@ -12,7 +14,14 @@ import java.util.Observable;
 public class MannedKiosk extends Observable implements Runnable {
 	private int pauseInMannedKiosk;
 	private Passenger passenger;
-	private KioskStatus kioskStatus;
+	private final int maxPauseInMannedKiosk=300;
+	private RuntimeSpeedController speedController;
+	private BaggageDetails baggageInfo;
+	private Attempt attempt;
+	private KioskStatusList kioskStatusList;
+	private KioskStatusList kioskStatus;
+	private String kioskEvent;
+
 
 	/**
 	 * 
@@ -20,6 +29,8 @@ public class MannedKiosk extends Observable implements Runnable {
 	public MannedKiosk() {
 		// TODO Auto-generated constructor stub
 		pauseInMannedKiosk=0;
+		passenger=null;
+		kioskEvent="";
 	}
 
 	/* (non-Javadoc)
@@ -28,15 +39,48 @@ public class MannedKiosk extends Observable implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		if (passenger!=null){
+			pauseInMannedKiosk=speedController.RandomWaitTime(maxPauseInMannedKiosk);
+			try {
+				Thread.sleep(pauseInMannedKiosk);
+			} catch (InterruptedException e) {
+				//System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+			attempt=passenger.CheckInDetails() ;
+			kioskStatus=KioskStatusList.SEND_TO_PLANE;
+		}
 		
 
 	}
 
-	public void SetPuseInMannedKiosk(int givenPauseInMannedKiosk){
-		pauseInMannedKiosk=givenPauseInMannedKiosk;
-	}
 	
 	public void SetPassenger(Passenger givenPassenger){
 		passenger=givenPassenger;
 	}
+	
+	public BaggageDetails GetBaggageInfo(){
+		return baggageInfo;
+	}
+	
+	public Attempt GetAttempt(){
+		return attempt;
+	}
+	
+	public KioskStatusList GetKioskStatus(){
+		return kioskStatusList;
+	}
+
+	public void SetKioskEvent(String givenKioskEvent){
+		kioskEvent=givenKioskEvent;
+	}
+	
+	public String GetKioskEvent(){
+		return kioskEvent;
+	}
+
+	
+	public void SetKioskStatus(KioskStatusList givenKioskStatus){
+		kioskStatusList=givenKioskStatus;
+	}	
 }

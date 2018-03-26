@@ -17,7 +17,8 @@ import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.FlightLoader;
 
 /**
  * Controller in the MVC pattern
- * Gets user orders from GUI, Displays events, Saves log into File...  
+ * Interacts with GUI of stage 2, interacts with AutoKiosks and MannedKiosk,
+ * interacts with data/log files  
  * @author mehdi seddiq (ms256)
  *
  */
@@ -32,12 +33,15 @@ public class CheckinController implements Observer{
 	private ErrorLogger errorLogger;
 	private PassengerGenerator passengerGenerator;
 	private PassengerQueue passengerQueue;
-	private AutoKiosk kiosk1, kiosk2;
+	private AutoKiosk autoKiosk1, autoKiosk2;
 	private MannedKiosk mannedKiosk;
-	private String kiosk1Event, kiosk2Event;
+	//private String kiosk1Event, kiosk2Event;
 	private ArrayList<String> CurrentEvent;
 	private SimulationClock simulationClock;
-	private StageSelectionFrame gui;
+	private boolean checkinRunning;
+	private StageSelectionFrame GUI1;
+	private static String kioskTitle;
+	private static Passenger currentPassenger;
 		
 	public CheckinController(){
 		// File locations.
@@ -56,6 +60,7 @@ public class CheckinController implements Observer{
 		
 		errorLogger = new ErrorLogger();
 		simulationClock = SimulationClock.GetInstance();
+		checkinRunning=true;
 		Thread clockThread = new Thread(simulationClock);
 		clockThread.start();
 		
@@ -78,21 +83,21 @@ public class CheckinController implements Observer{
 		// Start having passengers randomly join queue.
 		passengerGenerator.run(); 
 		//simulationClock = SimulationClock.GetInstance();
-		// Define Kiosks.
-		kiosk1.SetKioskNumber(1);
-		kiosk2.SetKioskNumber(2);
+		// Specify Kiosks' Number
+		autoKiosk1.SetKioskNumber(1);
+		autoKiosk2.SetKioskNumber(2);
 		
 		// Set up observations.
-		kiosk1.addObserver(this);
-		kiosk2.addObserver(this);
+		autoKiosk1.addObserver(this);
+		autoKiosk2.addObserver(this);
 		mannedKiosk.addObserver(this);
 		passengerGenerator.addObserver(this);
 		passengerQueue.addObserver(this);
 		
 		// Start up desks.
-		Thread kiosk1Thread = new Thread(kiosk1);
+		Thread kiosk1Thread = new Thread(autoKiosk1);
 		//kiosk1Thread.start();
-		Thread kiosk2Thread = new Thread(kiosk2);
+		Thread kiosk2Thread = new Thread(autoKiosk2);
 		//kiosk2Thread.start();
 		Thread mannedKioskThread = new Thread(mannedKiosk);
 		//mannedKioskThread.start();
@@ -137,19 +142,19 @@ public class CheckinController implements Observer{
 	}
 	
 	public void PrepareGUI() {
-		gui = new StageSelectionFrame();
-		// TODO: Give gui queue information passengerQueue.HeadOfTheQueue()
+		GUI1 = new StageSelectionFrame();
+		// TODO: Give GUI queue information passengerQueue.HeadOfTheQueue()
 	}
 	
 	@Override
 	public void update(Observable observable, Object object) {
-		ListOfObservables sourceOfEvent=GetChangedSubject();
+		ObservablesList sourceOfEvent=GetChangedSubject();
 		switch (sourceOfEvent){
 		case AUTO_KIOSK1:
-			ApplyKioskUpdates(kiosk1);
+			ApplyKioskUpdates(autoKiosk1);
 			break;
 		case AUTO_KIOSK2:
-			ApplyKioskUpdates(kiosk2);
+			ApplyKioskUpdates(autoKiosk2);
 			break;			
 		case MANNED_KIOSK:
 			ApplyMannedKioskUpdates(mannedKiosk);
@@ -168,19 +173,19 @@ public class CheckinController implements Observer{
 		}
 	}
 	
-	private ListOfObservables GetChangedSubject(){
-		if (kiosk1.hasChanged()){
-			return ListOfObservables.AUTO_KIOSK1;
-		}else if (kiosk2.hasChanged()){
-			return ListOfObservables.AUTO_KIOSK2;
+	private ObservablesList GetChangedSubject(){
+		if (autoKiosk1.hasChanged()){
+			return ObservablesList.AUTO_KIOSK1;
+		}else if (autoKiosk2.hasChanged()){
+			return ObservablesList.AUTO_KIOSK2;
 		}else if (mannedKiosk.hasChanged()){
-			return ListOfObservables.MANNED_KIOSK;
+			return ObservablesList.MANNED_KIOSK;
 		}else if (passengerGenerator.hasChanged()){
-			return ListOfObservables.PASSENGER_GENERATOR;
+			return ObservablesList.PASSENGER_GENERATOR;
 		}else if (passengerQueue.hasChanged()){
-			return ListOfObservables.PASSENGER_QUEUE;
+			return ObservablesList.PASSENGER_QUEUE;
 		}else if (simulationClock.hasChanged()){
-			return ListOfObservables.SIMULATION_CLOCK;
+			return ObservablesList.SIMULATION_CLOCK;
 		}
 		return null;
 	}
@@ -188,75 +193,114 @@ public class CheckinController implements Observer{
 	/**
 	 * @param mannedKiosk2
 	 */
-	private void ApplyMannedKioskUpdates(Passenger givenPassenger) {
+	private void ApplyMannedKioskUpdates(MannedKiosk updatedKiosk) {
 		// TODO Auto-generated method stub
+		updatedKiosk.SetKioskStatus(KioskStatusList.WAITING_FOR_PASSENGER);
+		String bookingRef = updatedKiosk.GetAttempt().BookingReference();
+		Booking booking = bookings.get(bookingRef);
+		BaggageDetails baggageInfo = updatedKiosk.GetBaggageInfo();
+		double fee = baggageInfo.Fee();
+		booking.CheckIn();
+		String flightCode = booking.GetFlightCode();
+		Flight flight = flights.get(flightCode);
+		flight.AddToFees(fee);				
+		flight.AddToWeight(baggageInfo.Weight());
+		flight.AddToVolume(baggageInfo.Volume());
+		String kioskEvent = "Passenger with booking reference "+ bookingRef + " was sent to Plane";
+		updatedKiosk.SetKioskEvent(kioskEvent);
+		String str = " MannedKiosk : "+kioskEvent;
+		CurrentEvent.add(str);
 		
 		
 		
 	}
 	
 	private void ApplyKioskUpdates(AutoKiosk updatedKiosk){
-		KioskStatus kioskStatus=updatedKiosk.GetKioskStatus();
+		
+/*		if (updatedKiosk1 instanceof AutoKiosk){
+			AutoKiosk updatedKiosk= (AutoKiosk) updatedKiosk1;
+		}else{
+			MannedKiosk updatedKiosk=(MannedKiosk) updatedKiosk1;
+		}*/
+		KioskStatusList kioskStatusList=updatedKiosk.GetKioskStatus();
 		Passenger passenger;
 		Attempt attempt;
-		String bookingRef, surname, flightCode, kioskEvent;
+		String bookingRef, flightCode, kioskEvent;
 		Booking booking;
 		Flight flight;
 		BaggageDetails baggageInfo;
 		double fee;
 		mannedKiosk.SetPassenger(null);
 		String str;
-		switch (kioskStatus){
-/*		case GET_PASSENGER:
+		boolean planeIsAvailable;
+		switch (kioskStatusList){
+/*		case HAS_PASSENGER:
 			updatedKiosk.SetPassenger(passengerQueue.HeadToKiosk());
 			kioskEvent="A Passenger from the Queue just referred";
 			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
 			CurrentEvent.add(str);
 			break;*/
-		case CHECK_ENTRIES:
-			passenger= updatedKiosk.GetPassenger();
-			attempt=passenger.CheckInDetails();
+		case CHECKING_ENTRIES:
+			attempt=updatedKiosk.GetAttempt();
 			bookingRef=attempt.BookingReference();
-			//surname=attempt.Surname();
 			updatedKiosk.SetBookingRefIsValid(bookings.containsKey(bookingRef));
 			kioskEvent="Passenger with booking reference "+bookingRef+
 					" is entering their details";
+			updatedKiosk.SetKioskEvent(kioskEvent);
 			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
 			CurrentEvent.add(str);
 			break;
 		case SEND_TO_MANNED_KIOSK:
+			updatedKiosk.SetKioskStatus(KioskStatusList.WAITING_FOR_PASSENGER);
 			passenger= updatedKiosk.GetPassenger();
 			mannedKiosk.SetPassenger(passenger);
+			kioskEvent="A passenger came";
+			mannedKiosk.SetKioskEvent(kioskEvent);			
+			str=" MannedKiosk : "+ kioskEvent;
+			CurrentEvent.add(str);			
 			//TODO:
 			Object[] info = passenger.QueueDisplayInformation();
 			flightCode=(String) info[2];
-			str="A passenger was sent from the Manned Kiosk to Flight No."+flightCode;
-			CurrentEvent.add(str);
 			break;
-		case GET_BAGGAGE:
-			passenger= updatedKiosk.GetPassenger();
-			bookingRef=passenger.CheckInDetails().BookingReference();
-			kioskEvent="Passenger with booking reference " + bookingRef +
-			" delivered  their baggage";
+		case GETTING_BAGGAGE:
+			bookingRef=updatedKiosk.GetAttempt().BookingReference();
+			kioskEvent="Booking details of the Passenger with booking reference " + bookingRef +
+			" was verified. Baggage was received";
+			updatedKiosk.SetKioskEvent(kioskEvent);
 			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
 			CurrentEvent.add(str);
 			break;
-		case DO_PAYMENT:
-			passenger= updatedKiosk.GetPassenger();
-			bookingRef=passenger.CheckInDetails().BookingReference();
-			booking=bookings.get(bookingRef);
+		case DOING_PAYMENT:
+			bookingRef=updatedKiosk.GetAttempt().BookingReference();
 			baggageInfo=updatedKiosk.GetBaggageInfo();
 			fee=baggageInfo.Fee();
 			kioskEvent="Passenger with booking reference " + bookingRef +
-			" charged ï¿½" + fee + " for baggage";
+			" was charged £" + fee + " for baggage";
+			updatedKiosk.SetKioskEvent(kioskEvent);
 			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
 			CurrentEvent.add(str);
 			break;
-		case SEND_TO_PLANE:
-			passenger= updatedKiosk.GetPassenger();
-			bookingRef=passenger.CheckInDetails().BookingReference();
+		case CHECK_PLANE:
+			bookingRef=updatedKiosk.GetAttempt().BookingReference();
 			booking=bookings.get(bookingRef);
-			baggageInfo=booking.GetBaggageInfo();
+			flightCode=booking.GetFlightCode();
+			planeIsAvailable=planes.get(flightCode).StillAvailableForBoarding();
+			updatedKiosk.SetPlaneIsAvailable(planeIsAvailable);
+			if (!planeIsAvailable){
+				updatedKiosk.SetKioskStatus(KioskStatusList.WAITING_FOR_PASSENGER);
+				kioskEvent="Flight Number "+flightCode+" has left. "+
+						"Passenger with booking reference " + bookingRef +
+						" failed to chick-in on-time.";
+				updatedKiosk.SetKioskEvent(kioskEvent);
+				str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
+				CurrentEvent.add(str);
+			}
+			break;
+		case SEND_TO_PLANE:
+			updatedKiosk.SetKioskStatus(KioskStatusList.WAITING_FOR_PASSENGER);
+			bookingRef=updatedKiosk.GetAttempt().BookingReference();
+			booking=bookings.get(bookingRef);
+			baggageInfo=updatedKiosk.GetBaggageInfo();
 			fee=baggageInfo.Fee();
 			booking.CheckIn();
 			flightCode=booking.GetFlightCode();
@@ -264,7 +308,8 @@ public class CheckinController implements Observer{
 			flight.AddToFees(fee);				
 			flight.AddToWeight(baggageInfo.Weight());
 			flight.AddToVolume(baggageInfo.Volume());
-			kioskEvent="Passenger with booking reference "+ bookingRef + " sent to Plane";
+			kioskEvent="Passenger with booking reference "+ bookingRef + " was sent to Plane";
+			updatedKiosk.SetKioskEvent(kioskEvent);
 			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
 			CurrentEvent.add(str);
 			break;
@@ -274,18 +319,6 @@ public class CheckinController implements Observer{
 
 	}
 
-	/**
-	 * checks if the given strings refer to a valid booking in the records 
-	 * of Booking Reference and whether it is found in the record of booking list. 
-	 * @param refString is checked to match the predefined format of Booking Reference 
-	 * and also to exist into the recorded bookings
-	 * @param surString is checked to be a typical surname
-	 * also it is checked if it matches the booking reference
-	 * @return a String showing the validity of the inputs
-	 *  if the given string matches one of the booking records
-	 * or otherwise what the type of mismatch is there  
-	 */
-	
 	private void GetPassengersForQueue() {
 		ArrayList<Passenger> passengersForQueue = passengerGenerator.PassengersToJoinTheQueue();
 		for(Passenger newPassenger : passengersForQueue) {
@@ -301,10 +334,10 @@ public class CheckinController implements Observer{
 			passengerQueue.ResetPassengerJoinedIndicator();
 			
 			if (!passengerQueue.IsQueueEmpty()){
-				if (kiosk1.GetKioskStatus()==KioskStatus.WAIT_FOR_PASSENGER){
-					kiosk1.SetQueueEmpty(false);
-				} else if (kiosk2.GetKioskStatus()==KioskStatus.WAIT_FOR_PASSENGER){
-					kiosk2.SetQueueEmpty(false);
+				if (autoKiosk1.GetKioskStatus()==KioskStatusList.WAITING_FOR_PASSENGER){
+					autoKiosk1.SetQueueEmpty(false);
+				} else if (autoKiosk2.GetKioskStatus()==KioskStatusList.WAITING_FOR_PASSENGER){
+					autoKiosk2.SetQueueEmpty(false);
 				}
 			}
 				}

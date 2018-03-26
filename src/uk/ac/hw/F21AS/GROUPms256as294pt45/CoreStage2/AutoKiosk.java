@@ -13,21 +13,22 @@ import src.uk.ac.hw.F21AS.GROUPms256as294pt45.Core.BaggageDetails;
  *
  */
 public class AutoKiosk extends Observable implements Runnable {
-	private KioskStatus kioskStatus;
+	private KioskStatusList kioskStatusList;
 	private boolean checkinRunning;
 	private boolean queueEmpty;
-	private boolean entryIsValid; //showing the validity of booking reference and surname
-	//private boolean useManned;
+	private boolean bookingRefIsValid; //showing the validity of booking reference and surname
 	private int pauseForPayment;
 	private int pauseForEntryCheck;	
-	private double fee;
+	private int pauseForBaggage;
 	private RuntimeSpeedController speedController;
 	private final int maxPauseForPayment=150;
+	private final int maxPauseForBaggage=200;
 	private Passenger passenger;
 	private int kioskNumber;
 	private Attempt attempt;
-	private String bookingRef, surname;
 	private BaggageDetails baggageInfo;
+	private boolean planeIsAvailable;
+	private String kioskEvent;
  
 	/**
 	 * Constructor for AutoKiosk
@@ -36,13 +37,16 @@ public class AutoKiosk extends Observable implements Runnable {
 	public AutoKiosk(){
 		checkinRunning=true;
 		queueEmpty=true;
-		entryIsValid=false;
-		//useManned=true;
-		kioskStatus=KioskStatus.WAIT_FOR_PASSENGER;
+		bookingRefIsValid=false;
+		kioskStatusList=KioskStatusList.WAITING_FOR_PASSENGER;
 		pauseForPayment = 0;
-		pauseForEntryCheck=0;	
-		fee=0;
+		pauseForEntryCheck=0;
+		pauseForBaggage=0;
 		kioskNumber=0;
+		attempt=null;
+		baggageInfo=null;
+		planeIsAvailable=true;
+		kioskEvent="";
 		
 	}
 	
@@ -55,34 +59,45 @@ public class AutoKiosk extends Observable implements Runnable {
 			StayAvailable();
 			CheckEntries();
 			if (attempt.UseMannedKiosk()){
-				kioskStatus=KioskStatus.SEND_TO_MANNED_KIOSK;
+				kioskStatusList=KioskStatusList.SEND_TO_MANNED_KIOSK;
 				setChanged();
 				notifyObservers();
 			}
-			if (entryIsValid)
-				ReceiveBaggage();
-				kioskStatus=KioskStatus.GET_BAGGAGE;
+			if (bookingRefIsValid){
+				kioskStatusList=KioskStatusList.CHECK_PLANE;
 				setChanged();
 				notifyObservers();
-				if (fee!=0){
-					Payment();
-					kioskStatus=KioskStatus.DO_PAYMENT;
+				if (planeIsAvailable){
+					kioskStatusList=KioskStatusList.GETTING_BAGGAGE;
+					ReceiveBaggage();
+					setChanged();
+					notifyObservers();
+					if (baggageInfo.Fee()!=0){
+						kioskStatusList=KioskStatusList.CHECK_PLANE;
+						setChanged();
+						notifyObservers();
+						if (planeIsAvailable){
+							kioskStatusList=KioskStatusList.DOING_PAYMENT;
+							DoPayment();
+							setChanged();
+							notifyObservers();
+						}
+					}
+					kioskStatusList=KioskStatusList.SEND_TO_PLANE;
 					setChanged();
 					notifyObservers();
 				}
-				kioskStatus=KioskStatus.SEND_TO_PLANE;
-				setChanged();
-				notifyObservers();
-		
+			}
 		}//while (checkinRunning)
 	}// run
 
 	private void StayAvailable(){
 		while (queueEmpty) {
-			kioskStatus=KioskStatus.WAIT_FOR_PASSENGER;
+			kioskStatusList=KioskStatusList.WAITING_FOR_PASSENGER;
 			try { wait(); }
 			catch (InterruptedException e) {}
 		}
+		kioskStatusList=KioskStatusList.HAS_PASSENGER;//This is just to say NOT WAITING_FOR_PASSENGER 
 	}
 	
 	private void CheckEntries(){
@@ -94,18 +109,25 @@ public class AutoKiosk extends Observable implements Runnable {
 				//System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
+			kioskStatusList=KioskStatusList.CHECKING_ENTRIES;
 			attempt=passenger.CheckInDetails();
 			setChanged();
 			notifyObservers();
-		}while (!attempt.UseMannedKiosk() && !entryIsValid);
+		}while (!attempt.UseMannedKiosk() && !bookingRefIsValid);
 	}
 	
 	private void ReceiveBaggage(){
+		pauseForBaggage=speedController.RandomWaitTime(maxPauseForBaggage);
+		try {
+			Thread.sleep(pauseForBaggage);
+		} catch (InterruptedException e) {
+			//System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
 		baggageInfo=passenger.EnterBaggageDetails();
-		fee=baggageInfo.Fee();
 	}
 	
-	private void Payment(){
+	private void DoPayment(){
 		pauseForPayment=speedController.RandomWaitTime(maxPauseForPayment);
 		try {
 			Thread.sleep(pauseForPayment);//pause due to payment process 
@@ -119,9 +141,17 @@ public class AutoKiosk extends Observable implements Runnable {
 		return baggageInfo;
 	}
 	
+	public Attempt GetAttempt(){
+		return attempt;
+	}
+	
 
 	public void SetPassenger(Passenger givenPassenger){
 		passenger=givenPassenger; 
+	}
+	
+	public void SetKioskStatus(KioskStatusList givenKioskStatus){
+		kioskStatusList=givenKioskStatus;
 	}
 
 	public Passenger GetPassenger(){
@@ -132,20 +162,28 @@ public class AutoKiosk extends Observable implements Runnable {
 		this.checkinRunning=givenCheckinRunning;
 	}
 	
-	public void SetBookingRefIsValid(boolean givenEntryIsValid){
-		entryIsValid=givenEntryIsValid;
+	public void SetKioskEvent(String givenKioskEvent){
+		kioskEvent=givenKioskEvent;
 	}
 	
-	public void SetFee (double givenFee){
-		fee=givenFee;
+	public String GetKioskEvent(){
+		return kioskEvent;
+	}
+	
+	public void SetBookingRefIsValid(boolean givenEntryIsValid){
+		bookingRefIsValid=givenEntryIsValid;
+	}
+	
+	public void SetPlaneIsAvailable(boolean givenPlaneIsAvailable){
+		planeIsAvailable=givenPlaneIsAvailable;
 	}
 	
 	public void SetQueueEmpty(boolean givenQueueEmpty){
 		queueEmpty=givenQueueEmpty;
 	}
 	
-	public KioskStatus GetKioskStatus(){
-		return kioskStatus;
+	public KioskStatusList GetKioskStatus(){
+		return kioskStatusList;
 	}
 	
 	public int GetKioskNumber(){
