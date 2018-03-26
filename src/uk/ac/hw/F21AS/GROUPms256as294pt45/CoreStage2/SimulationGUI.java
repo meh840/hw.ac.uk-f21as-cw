@@ -46,25 +46,34 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		//Clock= SimulationClock.GetInstance();
 		setTitle("DISPLAY");
     	//setSize(800,800);
-    	this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+    	this.setExtendedState(JFrame.MAXIMIZED_BOTH);// set the frame in full screen
     	setResizable(true);
 		setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
  
-		setupSouthPanel();
-		setupNorthPanel();
-		setupCenterPanel();
+		setupSouthPanel();//set the south panel of the frame
+		setupNorthPanel();//set the north panel of the frame
+		setupCenterPanel();//set the center panel of the frame
 	
         //pack and set visible
         pack();
         setVisible(true);
 	}
 
-
+	/**
+	 * This method set the center panel.
+	 * It creates the queue list display and the labels.
+	 * It displays the time.
+	 * It displays the kioks info and the flights info.
+	 * 
+	 *
+	 */
 	private void setupCenterPanel() {
 		// TODO Auto-generated method stub
 		
+		// it creates a panel  to add the queue title, list, information and time label and time display
 		JPanel tablequeue = new JPanel();
 		tablequeue.setLayout(new GridBagLayout());
+		
 		// title for the Queue
 		queuelabel=new JLabel("Passenger's Queue");
 		queuelabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
@@ -80,11 +89,6 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		queueList.setPreferredScrollableViewportSize(new Dimension(340,400));
 		queueList.setFillsViewportHeight(true);
 		queueList.setEnabled(false);
-		/*centerRenderer.setVerticalAlignment(JLabel.CENTER);
-		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		queueList.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-		queueList.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
-		queueList.getColumnModel().getColumn(2).setCellRenderer( centerRenderer );*/
 		placeincenter (queueList);
 		QueueList=new JScrollPane(queueList);
 		c = new GridBagConstraints();
@@ -105,8 +109,10 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		c.fill= GridBagConstraints.VERTICAL;
 		tablequeue.add(queueinfo,c);
 		
+		// this panel contains the time label and time display
 		JPanel timePanel= new JPanel();
 		timePanel.setLayout(new GridBagLayout());
+		
 		//the time label
 		timelabel=new JLabel("Time :");
 		timelabel.setFont( new Font(Font.MONOSPACED, Font.BOLD,18));
@@ -128,6 +134,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		c.fill= GridBagConstraints.HORIZONTAL;
 		timePanel.add(timedisplay,c);
 		
+		//add the time panel in queue panel
 		c = new GridBagConstraints();
 		c.gridx=0;
 		c.gridy=3;
@@ -180,8 +187,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		c.fill= GridBagConstraints.VERTICAL;
 		Desk2Panel.add(desk2,c);
 		
-		//String ap = "information  \r\n information  \r\n   oeeoo";
-		//display  kiosk2 information
+		
 		deskinfo2=new JTextArea("information");
 		deskinfo2.setEditable(false);
 		deskinfo2.setFont( new Font(Font.MONOSPACED, Font.ITALIC,15));
@@ -247,28 +253,17 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		c.fill= GridBagConstraints.VERTICAL;
 		Flight1Panel.add(flightinfo1,c);
 		
-		Object [][] b= {
-				{"111","Alan"},
-				
-		};
-		//display flight1 table
-		
+	
 		flight1table=new JTable(modelList1);
 		flight1table.setPreferredScrollableViewportSize(new Dimension(30,20));
 		flight1table.setEnabled(false);
 		flight1table.setFillsViewportHeight(true);
-		/*centerRenderer.setVerticalAlignment(JLabel.CENTER);
-		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		flight1table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-		flight1table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );*/
 		placeincenter (flight1table);
 		flightList1=new JScrollPane(flight1table);
 		flightList1.setPreferredSize(new Dimension(150,40));
 		c = new GridBagConstraints();
 		c.gridx=0;
 		c.gridy=3;
-		//c.ipady=50;
-		//c.ipadx=100;
 		c.insets=new Insets(25,20,0,0);
 		c.fill= GridBagConstraints.VERTICAL;
 		Flight1Panel.add(flightList1,c);
@@ -296,11 +291,9 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		flightinfo2=new JTextField("information",30);
 		flightinfo2.setFont( new Font(Font.MONOSPACED, Font.ITALIC,15));
 		flightinfo2.setEditable(false);
-		//flightinfo2.setPreferredSize(new Dimension(120,50));
 		c = new GridBagConstraints();
 		c.gridx=0;
 		c.gridy=2;
-		//c.ipady=50;
 		c.ipadx=100;
 		c.insets=new Insets(5,20,0,0);
 		c.fill= GridBagConstraints.VERTICAL;
@@ -310,18 +303,12 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		flight2table.setPreferredScrollableViewportSize(new Dimension(30,20));
 		flight2table.setEnabled(false);
 		flight2table.setFillsViewportHeight(true);
-		/*centerRenderer.setVerticalAlignment(JLabel.CENTER);
-		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		flight2table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-		flight2table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );*/
 		placeincenter (flight2table);
 		flightList2=new JScrollPane(flight2table);
 		flightList2.setPreferredSize(new Dimension(150,40));
 		c = new GridBagConstraints();
 		c.gridx=0;
 		c.gridy=3;
-		//c.ipady=50;
-		//c.ipadx=100;
 		c.insets=new Insets(25,20,0,0);
 		c.fill= GridBagConstraints.VERTICAL;
 		Flight2Panel.add(flightList2,c);
@@ -362,18 +349,12 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		flight3table.setPreferredScrollableViewportSize(new Dimension(30,20));
 		flight3table.setEnabled(false);
 		flight3table.setFillsViewportHeight(true);
-		/*centerRenderer.setVerticalAlignment(JLabel.CENTER);
-		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		flight3table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-		flight3table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );*/
 		placeincenter (flight3table);
 		flightList3=new JScrollPane(flight3table);
 		flightList3.setPreferredSize(new Dimension(150,40));
 		c = new GridBagConstraints();
 		c.gridx=0;
 		c.gridy=3;
-		//c.ipady=50;
-		//c.ipadx=100;
 		c.insets=new Insets(25,20,0,0);
 		c.fill= GridBagConstraints.VERTICAL;
 		Flight3Panel.add(flightList3,c);
@@ -419,7 +400,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
         this.add(centerPanel,BorderLayout.CENTER);
 	}
 
-
+//creates the north panel.
 	private void setupNorthPanel() {
 		// TODO Auto-generated method stub
 		JPanel titlePanel = new JPanel();
@@ -433,13 +414,14 @@ public class SimulationGUI extends JFrame  implements ActionListener{
         this.add(northPanel, BorderLayout.NORTH);   	
 	}
 
-
+//creates the south panel
 	private void setupSouthPanel() {
 		// TODO Auto-generated method stub
 		JPanel checkboxlabelPanel=new JPanel();
 		speedlabel=new JLabel("Speed:");
 		checkboxlabelPanel.add(speedlabel);
 		
+		//creates the check in boxies
 		JPanel checkboxPanel=new JPanel();
 		checkboxPanel.setLayout(new GridLayout(1,3));
 		spbox1=new JCheckBox("Regular");
@@ -457,18 +439,16 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		spbox2.addActionListener(this);
 		spbox3.addActionListener(this);
 		
-		//JPanel closepanel=new JPanel();
+		//creates the stop button
 		stop=new JButton("Stop");
 		stop.addActionListener(this);
-		//closepanel.add(close);
 		
+		//place all the components in the south panel
 		JPanel SouthPanel = new JPanel();
 		SouthPanel.setLayout(new GridBagLayout());
 		c = new GridBagConstraints();
 		c.gridx=0;
 		c.gridy=0;
-		//c.weighty=2;
-		//c.ipady=40;
 		c.fill= GridBagConstraints.HORIZONTAL;
 		SouthPanel.add(checkboxlabelPanel,c);
 		c = new GridBagConstraints();
@@ -505,39 +485,47 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 			runtimeSpeed.SetRuntimeSpeed(100);
 		}
 	}
+	//updates the queue list
 	public void settheList(Object[][] headofqueue){
 		modelList=new  DefaultTableModel(headofqueue, Qlistlabels);
 		queueList.setModel(modelList);
 		placeincenter (queueList);
 	}
+	//updates the flights 1  weight and volume
 	public void setflightlist1(Object[][] headofqueue){
 		modelList1=new  DefaultTableModel(headofqueue, Qlistlabels);
 		flight1table.setModel(modelList1);
 		placeincenter (flight1table);
 	}
+	//updates the flights 2  weight and volume
 	public void setflightlist2(Object[][] headofqueue){
 		modelList2=new  DefaultTableModel(headofqueue, Qlistlabels);
 		flight2table.setModel(modelList2);
 		placeincenter (flight2table);
 	}
+	//updates the flights 3  weight and volume
 	public void setflightlist3(Object[][] headofqueue){
 		modelList3=new  DefaultTableModel(headofqueue, Qlistlabels);
 		flight3table.setModel(modelList3);
 		placeincenter (flight3table);
 	}
-	
+	// updates the kiosk 1 informations
 	public void setkiosk1info(String kiosk1info) {
 		deskinfo1.setText(kiosk1info);
 	}
+	//updates the kiosk 2 informations
 	public void setkiosk2info(String kiosk2info) {
 		deskinfo2.setText(kiosk2info);
 	}
+	// updates the departure time for flight 1
 	public void setflight1time(String flightdep) {
 		flight1time.setText(flightdep);
 	}
+	// updates the departure time for flight 2
 	public void setflight2time(String flightdep) {
 		flight2time.setText(flightdep);
 	}
+	// updates the departure time for flight 3
 	public void setf(String flightdep) {
 		flight3time.setText(flightdep);
 	}
@@ -565,6 +553,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 	public void setflight3tilte(String flighttitle) {
 		flight3.setText(flighttitle);
 	}
+	//set the tables info into the center of the cell
 	private void placeincenter (JTable x) {
 		centerRenderer.setVerticalAlignment(JLabel.CENTER);
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);

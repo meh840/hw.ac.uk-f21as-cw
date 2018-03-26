@@ -110,6 +110,9 @@ public class CheckinController implements Observer{
 		// Start having passengers randomly join queue.
 		Thread pgThread = new Thread(passengerGenerator);
 		pgThread.start(); 
+		gui.setkiosk1info(autoKiosk1.GetKioskEvent());
+		gui.setkiosk2info(autoKiosk2.GetKioskEvent());
+
 	}
 
 	/**
@@ -151,7 +154,7 @@ public class CheckinController implements Observer{
 		gui.settheList(passengerQueue.HeadOfTheQueue());
 		gui.setqueuestage(Integer.toString(passengerQueue.SizeOfQueue()));
 		gui.setclock(simulationClock.CurrentTime());
-		//gui.setflight1title(flighttitle);
+		//gui.setflight1title();
 		// TODO: Give gui queue information passengerQueue.HeadOfTheQueue()
 	}
 	
@@ -160,6 +163,7 @@ public class CheckinController implements Observer{
 		ObservablesList sourceOfEvent=GetChangedSubject(observable);
 		switch (sourceOfEvent){
 		case AUTO_KIOSK1:
+			gui.setkiosk1info(autoKiosk1.GetKioskEvent());
 			ApplyKioskUpdates(autoKiosk1);
 			break;
 		case AUTO_KIOSK2:
@@ -361,7 +365,7 @@ public class CheckinController implements Observer{
 		if(passengerQueue.HasChangeToQueueDisplayInfoBeenMade() ) {
 			// TODO: Use passengerQueue.HeadOfTheQueue() to update GUI queue display. 
 			passengerQueue.ResetChangeToQueueDisplayIndicator();
-			gui.settheList(passengerQueue.HeadOfTheQueue());
+			//gui.settheList(passengerQueue.HeadOfTheQueue());
 		}
 		
 	}
