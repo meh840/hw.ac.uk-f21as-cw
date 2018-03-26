@@ -37,7 +37,7 @@ public class CheckinController implements Observer{
 	private String kiosk1Event, kiosk2Event;
 	private ArrayList<String> CurrentEvent;
 	private SimulationClock simulationClock;
-	private StageSelectionFrame gui;
+	private SimulationGUI gui;
 		
 	public CheckinController(){
 		// File locations.
@@ -59,6 +59,8 @@ public class CheckinController implements Observer{
 		Thread clockThread = new Thread(simulationClock);
 		clockThread.start();
 		
+		kiosk1=new AutoKiosk();
+		kiosk2=new AutoKiosk();
 		
 		CollectDataFromFiles();
 		
@@ -85,7 +87,7 @@ public class CheckinController implements Observer{
 		// Set up observations.
 		kiosk1.addObserver(this);
 		kiosk2.addObserver(this);
-		mannedKiosk.addObserver(this);
+		//mannedKiosk.addObserver(this);
 		passengerGenerator.addObserver(this);
 		passengerQueue.addObserver(this);
 		
@@ -137,7 +139,9 @@ public class CheckinController implements Observer{
 	}
 	
 	public void PrepareGUI() {
-		gui = new StageSelectionFrame();
+		gui = new SimulationGUI();
+		gui.settheList(passengerQueue.HeadOfTheQueue());
+		gui.setqueuestage(Integer.toString(passengerQueue.SizeOfQueue()));
 		// TODO: Give gui queue information passengerQueue.HeadOfTheQueue()
 	}
 	
