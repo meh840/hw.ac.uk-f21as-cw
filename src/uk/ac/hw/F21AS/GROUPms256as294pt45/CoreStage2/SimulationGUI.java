@@ -27,18 +27,13 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 	private String [] Qlistlabels = {"Reference Number","Name","Flight's Number"};
 	private String [] WVflightlabels = {"Weight %","Volume %"};
 	Object [][] b= {
-			{},
-			
-	};//b, Qlistlabels
-	Object [][] ab= {
-			{"111","Alan","aedf"},
-			{"111","Alan","aedf"},
-			{"111","Alan","aedf"},
+			{},		
 	};
-	DefaultTableModel modelList = new DefaultTableModel(b, Qlistlabels); 
-	DefaultTableModel modelList1 = new DefaultTableModel(b, WVflightlabels); 
-	DefaultTableModel modelList2 = new DefaultTableModel(b, WVflightlabels); 
-	DefaultTableModel modelList3 = new DefaultTableModel(b, WVflightlabels); 
+	private DefaultTableModel modelList = new DefaultTableModel(b, Qlistlabels); 
+	private DefaultTableModel modelList1 = new DefaultTableModel(b, WVflightlabels); 
+	private DefaultTableModel modelList2 = new DefaultTableModel(b, WVflightlabels); 
+	private DefaultTableModel modelList3 = new DefaultTableModel(b, WVflightlabels); 
+	
 	public SimulationGUI() {
 		runtimeSpeed = RuntimeSpeedController.getInstance();
 		
@@ -74,23 +69,17 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		c.fill= GridBagConstraints.VERTICAL;
 		tablequeue.add(queuelabel,c);
 		
-		
-		Object [][] a= {
-				{"111","Alan","aedf"},
-				{"111","Alan","aedf"},
-				{"111","Alan","aedf"},
-		};
-		
 		//the queue list
 		queueList=new JTable(modelList);
 		queueList.setPreferredScrollableViewportSize(new Dimension(340,400));
 		queueList.setFillsViewportHeight(true);
 		queueList.setEnabled(false);
-		centerRenderer.setVerticalAlignment(JLabel.CENTER);
+		/*centerRenderer.setVerticalAlignment(JLabel.CENTER);
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		queueList.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
 		queueList.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
-		queueList.getColumnModel().getColumn(2).setCellRenderer( centerRenderer );
+		queueList.getColumnModel().getColumn(2).setCellRenderer( centerRenderer );*/
+		placeincenter (queueList);
 		QueueList=new JScrollPane(queueList);
 		c = new GridBagConstraints();
 		c.gridx=0;
@@ -261,10 +250,11 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		flight1table.setPreferredScrollableViewportSize(new Dimension(30,20));
 		flight1table.setEnabled(false);
 		flight1table.setFillsViewportHeight(true);
-		centerRenderer.setVerticalAlignment(JLabel.CENTER);
+		/*centerRenderer.setVerticalAlignment(JLabel.CENTER);
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		flight1table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-		flight1table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+		flight1table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );*/
+		placeincenter (flight1table);
 		flightList1=new JScrollPane(flight1table);
 		flightList1.setPreferredSize(new Dimension(150,40));
 		c = new GridBagConstraints();
@@ -313,10 +303,11 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		flight2table.setPreferredScrollableViewportSize(new Dimension(30,20));
 		flight2table.setEnabled(false);
 		flight2table.setFillsViewportHeight(true);
-		centerRenderer.setVerticalAlignment(JLabel.CENTER);
+		/*centerRenderer.setVerticalAlignment(JLabel.CENTER);
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		flight2table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-		flight2table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+		flight2table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );*/
+		placeincenter (flight2table);
 		flightList2=new JScrollPane(flight2table);
 		flightList2.setPreferredSize(new Dimension(150,40));
 		c = new GridBagConstraints();
@@ -364,10 +355,11 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 		flight3table.setPreferredScrollableViewportSize(new Dimension(30,20));
 		flight3table.setEnabled(false);
 		flight3table.setFillsViewportHeight(true);
-		centerRenderer.setVerticalAlignment(JLabel.CENTER);
+		/*centerRenderer.setVerticalAlignment(JLabel.CENTER);
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		flight3table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-		flight3table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+		flight3table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );*/
+		placeincenter (flight3table);
 		flightList3=new JScrollPane(flight3table);
 		flightList3.setPreferredSize(new Dimension(150,40));
 		c = new GridBagConstraints();
@@ -509,21 +501,22 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 	public void settheList(Object[][] headofqueue){
 		modelList=new  DefaultTableModel(headofqueue, Qlistlabels);
 		queueList.setModel(modelList);
-		queueList.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-		queueList.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
-		queueList.getColumnModel().getColumn(2).setCellRenderer( centerRenderer );
+		placeincenter (queueList);
 	}
 	public void setflightlist1(Object[][] headofqueue){
 		modelList1=new  DefaultTableModel(headofqueue, Qlistlabels);
 		flight1table.setModel(modelList1);
+		placeincenter (flight1table);
 	}
 	public void setflightlist2(Object[][] headofqueue){
 		modelList2=new  DefaultTableModel(headofqueue, Qlistlabels);
 		flight2table.setModel(modelList2);
+		placeincenter (flight2table);
 	}
 	public void setflightlist3(Object[][] headofqueue){
 		modelList3=new  DefaultTableModel(headofqueue, Qlistlabels);
 		flight3table.setModel(modelList3);
+		placeincenter (flight3table);
 	}
 	
 	public void setkiosk1info(String kiosk1info) {
@@ -564,6 +557,21 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 	}
 	public void setflight3tilte(String flighttitle) {
 		flight3.setText(flighttitle);
+	}
+	private void placeincenter (JTable x) {
+		centerRenderer.setVerticalAlignment(JLabel.CENTER);
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		
+		if(x.getColumnCount()==3) {
+			x.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
+			x.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+			x.getColumnModel().getColumn(2).setCellRenderer( centerRenderer );
+		}
+		else {
+			x.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
+			x.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+		}
+			
 	}
 
 }
