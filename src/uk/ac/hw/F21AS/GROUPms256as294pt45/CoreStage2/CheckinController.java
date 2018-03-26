@@ -64,8 +64,8 @@ public class CheckinController implements Observer{
 		Thread clockThread = new Thread(simulationClock);
 		clockThread.start();
 		
-		kiosk1=new AutoKiosk();
-		kiosk2=new AutoKiosk();
+		autoKiosk1=new AutoKiosk();
+		autoKiosk2=new AutoKiosk();
 		
 		CollectDataFromFiles();
 		
@@ -84,15 +84,15 @@ public class CheckinController implements Observer{
 	public void StartCheckin(){
 		// Start having passengers randomly join queue.
 		passengerGenerator.run(); 
-		//simulationClock = SimulationClock.GetInstance();
-		// Specify Kiosks' Number
+		
+		// Define Kiosks.
 		autoKiosk1.SetKioskNumber(1);
 		autoKiosk2.SetKioskNumber(2);
 		
 		// Set up observations.
 		autoKiosk1.addObserver(this);
 		autoKiosk2.addObserver(this);
-		mannedKiosk.addObserver(this);
+		//mannedKiosk.addObserver(this);
 		passengerGenerator.addObserver(this);
 		passengerQueue.addObserver(this);
 		
@@ -101,7 +101,7 @@ public class CheckinController implements Observer{
 		//kiosk1Thread.start();
 		Thread kiosk2Thread = new Thread(autoKiosk2);
 		//kiosk2Thread.start();
-		Thread mannedKioskThread = new Thread(mannedKiosk);
+		//Thread mannedKioskThread = new Thread(mannedKiosk);
 		//mannedKioskThread.start();
 		
 		// Send passengers to kiosks.
@@ -159,7 +159,8 @@ public class CheckinController implements Observer{
 			ApplyKioskUpdates(autoKiosk2);
 			break;			
 		case MANNED_KIOSK:
-			ApplyMannedKioskUpdates(mannedKiosk);
+			//ApplyMannedKioskUpdates((Passenger)object);
+			//TODO: What is being passed in?
 			break;
 		case PASSENGER_GENERATOR:
 			GetPassengersForQueue();
@@ -342,13 +343,21 @@ public class CheckinController implements Observer{
 					autoKiosk2.SetQueueEmpty(false);
 				}
 			}
-				}
+		}
 		
 		if(passengerQueue.HasChangeToQueueDisplayInfoBeenMade() ) {
 			// TODO: Use passengerQueue.HeadOfTheQueue() to update GUI queue display. 
 			passengerQueue.ResetChangeToQueueDisplayIndicator();
 		}
 		
+	}
+	
+	private void ClockUpdate() {
+		if(simulationClock.IsThereADepartureDue()) {
+			//TODO: Check planes 
+		} else {
+			
+		}
 	}
 }
 

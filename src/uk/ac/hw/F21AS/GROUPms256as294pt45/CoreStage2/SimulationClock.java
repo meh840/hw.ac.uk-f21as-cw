@@ -117,6 +117,14 @@ public final class SimulationClock extends Observable implements Runnable {
 	}
 	
 	/**
+	 * A check to see if notification is a departure update or time update.
+	 * @return True: Departure due. False: No planes departing.
+	 */
+	public boolean IsThereADepartureDue() {
+		return departureDue;
+	}
+	
+	/**
 	 * Resets departure indicator after planes have been checked.
 	 */
 	public void PlanesChecked() {
