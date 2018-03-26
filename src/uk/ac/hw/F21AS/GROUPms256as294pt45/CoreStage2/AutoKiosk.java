@@ -109,19 +109,20 @@ public class AutoKiosk extends Observable implements Runnable {
 	}
 	
 	private void CheckEntries(){
-		do{
-			pauseForEntryCheck=speedController.TimeToEnterDetails();
-			try {
-				Thread.sleep(pauseForEntryCheck);
-			} catch (InterruptedException e) {
-				//System.out.println(e.getMessage());
-				e.printStackTrace();
-			}
-			kioskStatusList=KioskStatusList.CHECKING_ENTRIES;
+		pauseForEntryCheck=speedController.TimeToEnterDetails();
+		try {
+			Thread.sleep(pauseForEntryCheck);
+		} catch (InterruptedException e) {
+			//System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		kioskStatusList=KioskStatusList.CHECKING_ENTRIES;
+		attempt=passenger.CheckInDetails();
+		
+		while(!VerifyBookingRef(attempt.BookingReference(),attempt.Surname()) 
+				&& !attempt.UseMannedKiosk()) {
 			attempt=passenger.CheckInDetails();
-			setChanged();
-			notifyObservers();
-		}while (!attempt.UseMannedKiosk() && !bookingRefIsValid);
+		}	
 	}
 	
 	private void ReceiveBaggage(){
@@ -206,7 +207,7 @@ public class AutoKiosk extends Observable implements Runnable {
 	 * verifies if the given string matches the predefined format of booking references	
 	 * @param refString is a string which is supposed to be a booking reference
 	 * @returns true if the string matches the format, false otherwise
-	 *//*
+	 */
 	private Boolean CheckBookingRefFormat (String refString) {
 		final int referenceSize=7;
 		String bookingRef=refString.trim();
@@ -227,11 +228,11 @@ public class AutoKiosk extends Observable implements Runnable {
 		}
 	}
 
-	*//**
+/*
 	 * verifies the given string to be potentially a surname 
 	 * @param refString which is supposed to be a surname
 	 * @return true if the input is deduced as a surname, false otherwise
-	 *//*
+	 */
 	private Boolean CheckSurnameFormat(String surString) {
 		String surname=surString.trim();
 		String s1 = surname.substring(0, 1).toUpperCase();
@@ -247,27 +248,17 @@ public class AutoKiosk extends Observable implements Runnable {
 		return true;
 	}
 
-	private boolean VerifyBookingRef (String refString) {
+	private boolean VerifyBookingRef (String refString, String surString) {
 		if (!CheckBookingRefFormat(refString)){
-			kioskEvent= "The given string does not match the format of booking reference";
 			return false;
 		}
 		if (!CheckSurnameFormat(surString)){
-			kioskEvent= "The given string could not be a surname";
 			return false;			
 		}
-		if (bookings.get(refString)==null){
-			kioskEvent= "The given code is not found in the booking records";
-			return false;			
-		}
-		if (!surString.equals(bookings.get(refString).GetSurname())){
-			kioskEvent= "The given surname does not correspond to the recorded booking refernce";
-			return false;			
-		}
-		kioskEvent= "The booking was found in the records successfully";
+
 		return true;
 	}	
-	*/	
+		
 }
 
 
