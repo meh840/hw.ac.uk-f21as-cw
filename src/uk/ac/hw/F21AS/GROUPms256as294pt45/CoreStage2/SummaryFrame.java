@@ -85,5 +85,9 @@ public class SummaryFrame extends JFrame  implements ActionListener{
     		System.exit(0);
 		}
 	}
+	public void setevents(String events) {
+		SummaryInfo.setText(events);
+		
+	}
 
 }
