@@ -64,6 +64,8 @@ public class CheckinController implements Observer{
 		Thread clockThread = new Thread(simulationClock);
 		clockThread.start();
 		
+		kiosk1=new AutoKiosk();
+		kiosk2=new AutoKiosk();
 		
 		CollectDataFromFiles();
 		
@@ -275,7 +277,7 @@ public class CheckinController implements Observer{
 			baggageInfo=updatedKiosk.GetBaggageInfo();
 			fee=baggageInfo.Fee();
 			kioskEvent="Passenger with booking reference " + bookingRef +
-			" was charged £" + fee + " for baggage";
+			" was charged ï¿½" + fee + " for baggage";
 			updatedKiosk.SetKioskEvent(kioskEvent);
 			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
 			CurrentEvent.add(str);

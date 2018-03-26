@@ -12,9 +12,9 @@ public class AirportCheckin {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//StageSelectionFrame a=new StageSelectionFrame();
-		CheckinController controller = new CheckinController();
-		controller.StartCheckin();
+		StageSelectionFrame a=new StageSelectionFrame();
+		//CheckinController controller = new CheckinController();
+		//controller.StartCheckin();
 		
 	}
 
