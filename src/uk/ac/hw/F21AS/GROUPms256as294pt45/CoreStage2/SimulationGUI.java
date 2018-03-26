@@ -496,7 +496,7 @@ public class SimulationGUI extends JFrame  implements ActionListener{
 			runtimeSpeed.SetRuntimeSpeed(2);
 		}
 		if (e.getSource() == spbox3) {
-			runtimeSpeed.SetRuntimeSpeed(3);
+			runtimeSpeed.SetRuntimeSpeed(4);
 		}
 	}
 	public void settheList(Object[][] headofqueue){

@@ -36,7 +36,7 @@ public class CheckinController implements Observer{
 	private AutoKiosk autoKiosk1, autoKiosk2;
 	private MannedKiosk mannedKiosk;
 	//private String kiosk1Event, kiosk2Event;
-	private ArrayList<String> CurrentEvent;
+	private ArrayList<String> currentEvent;
 	private SimulationClock simulationClock;
 	private boolean checkinRunning;
 	private SimulationGUI gui;
@@ -66,6 +66,8 @@ public class CheckinController implements Observer{
 		checkinRunning=true;
 		Thread clockThread = new Thread(simulationClock);
 		clockThread.start();
+		
+		currentEvent = new ArrayList<String>();
 		
 		autoKiosk1 = new AutoKiosk();
 		autoKiosk2 = new AutoKiosk();
@@ -221,7 +223,7 @@ public class CheckinController implements Observer{
 		String kioskEvent = "Passenger with booking reference "+ bookingRef + " was sent to Plane";
 		updatedKiosk.SetKioskEvent(kioskEvent);
 		String str = " MannedKiosk : "+kioskEvent;
-		CurrentEvent.add(str);
+		currentEvent.add(str);
 		
 		
 		
@@ -260,7 +262,7 @@ public class CheckinController implements Observer{
 					" is entering their details";
 			updatedKiosk.SetKioskEvent(kioskEvent);
 			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
-			CurrentEvent.add(str);
+			currentEvent.add(str);
 			break;
 		case SEND_TO_MANNED_KIOSK:
 			updatedKiosk.SetKioskStatus(KioskStatusList.WAITING_FOR_PASSENGER);
@@ -269,7 +271,7 @@ public class CheckinController implements Observer{
 			kioskEvent="A passenger came";
 			mannedKiosk.SetKioskEvent(kioskEvent);			
 			str=" MannedKiosk : "+ kioskEvent;
-			CurrentEvent.add(str);			
+			currentEvent.add(str);			
 			//TODO:
 			Object[] info = passenger.QueueDisplayInformation();
 			flightCode=(String) info[2];
@@ -280,7 +282,7 @@ public class CheckinController implements Observer{
 			" was verified. Baggage was received";
 			updatedKiosk.SetKioskEvent(kioskEvent);
 			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
-			CurrentEvent.add(str);
+			currentEvent.add(str);
 			break;
 		case DOING_PAYMENT:
 			bookingRef=updatedKiosk.GetAttempt().BookingReference();
@@ -290,7 +292,7 @@ public class CheckinController implements Observer{
 			" was charged �" + fee + " for baggage";
 			updatedKiosk.SetKioskEvent(kioskEvent);
 			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
-			CurrentEvent.add(str);
+			currentEvent.add(str);
 			break;
 		case CHECK_PLANE:
 			bookingRef=updatedKiosk.GetAttempt().BookingReference();
@@ -305,7 +307,7 @@ public class CheckinController implements Observer{
 						" failed to chick-in on-time.";
 				updatedKiosk.SetKioskEvent(kioskEvent);
 				str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
-				CurrentEvent.add(str);
+				currentEvent.add(str);
 			}
 			break;
 		case SEND_TO_PLANE:
@@ -323,7 +325,7 @@ public class CheckinController implements Observer{
 			kioskEvent="Passenger with booking reference "+ bookingRef + " was sent to Plane";
 			updatedKiosk.SetKioskEvent(kioskEvent);
 			str=" AutoKiosk "+updatedKiosk.GetKioskNumber()+" : "+kioskEvent;
-			CurrentEvent.add(str);
+			currentEvent.add(str);
 			break;
 		default:
 			break;
@@ -347,8 +349,10 @@ public class CheckinController implements Observer{
 			
 			if (!passengerQueue.IsQueueEmpty()){
 				if (autoKiosk1.GetKioskStatus()==KioskStatusList.WAITING_FOR_PASSENGER){
+					autoKiosk1.SetPassenger(passengerQueue.HeadToKiosk());
 					autoKiosk1.SetQueueEmpty(false);
 				} else if (autoKiosk2.GetKioskStatus()==KioskStatusList.WAITING_FOR_PASSENGER){
+					autoKiosk2.SetPassenger(passengerQueue.HeadToKiosk());
 					autoKiosk2.SetQueueEmpty(false);
 				}
 			}
