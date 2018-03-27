@@ -112,7 +112,7 @@ public class Passenger {
 	 */
 	private String AlterSurnameCheck(String surname) {
 		if(alterSurname) {
-			surname.substring(0,(surname.length() - 1));
+			surname += "1";
 		}
 		
 		return surname;
